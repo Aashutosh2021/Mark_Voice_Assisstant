@@ -1,0 +1,10 @@
+^E:\NOVA\RE_NOVA\PYCDC\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SE:/Nova/Re_Nova/pycdc -BE:/Nova/Re_Nova/pycdc --check-stamp-file E:/Nova/Re_Nova/pycdc/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
