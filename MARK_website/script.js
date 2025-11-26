@@ -806,3 +806,24 @@ window.openWhatsApp = openWhatsApp;
 window.downloadMark = downloadMark;
 window.initializeRazorpay = initializeRazorpay;
 window.updatePayButton = updatePayButton;
+
+
+// Prevent right-click context menu
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
+
+    // Disable keyboard shortcuts
+  document.addEventListener("keydown", function(e) {
+    // Ctrl+U, Ctrl+Shift+I, F12, Ctrl+S, Ctrl+Shift+C
+    if (
+      e.ctrlKey && e.key.toLowerCase() === 'u' ||  // View source
+      e.key === "F12" ||                           // DevTools
+      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') || // Inspect
+      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c') || // Inspect (element picker)
+      (e.ctrlKey && e.key.toLowerCase() === 's')   // Save
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
