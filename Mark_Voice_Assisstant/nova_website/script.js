@@ -705,6 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     bindClick('welcome-continue-btn', () => showScreen('version-selector'));
+    bindClick('version-back-btn', () => showScreen('welcome-screen'));
     bindClick('mark1-card', () => selectVersion('mark1'));
     bindClick('continue-btn', showVersionDetails);
     bindClick('variant-back-btn', () => showScreen('version-selector'));
@@ -717,9 +718,6 @@ document.addEventListener('DOMContentLoaded', function() {
     bindClick('whatsapp-btn', openWhatsApp);
     bindClick('whatsapp-back-btn', () => showScreen('details-screen'));
     bindClick('download-btn', downloadMark);
-    bindClick('about-back-btn', () => showScreen('welcome-screen'));
-    bindClick('nav-about-link', () => showScreen('about-screen'));
-    bindClick('about-get-started-btn', () => showScreen('version-selector'));
     
     // Load key status on page load
     updateKeyStatus();

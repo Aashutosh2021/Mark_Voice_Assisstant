@@ -60,14 +60,14 @@ class Assistant(Agent):
 
         # Feature mapping for different variants
         FEATURE_MAP = {
-            "base": [
+            "core": [
                 search_web,
                 get_time_info,
                 open_app,
                 get_system_info,
                 control_microphone,
             ],
-            "premium": [
+            "pro": [
                 search_web,
                 get_time_info,
                 open_app,
@@ -81,7 +81,7 @@ class Assistant(Agent):
                 type_user_message_auto,
                 control_microphone,
             ],
-            "elite": [
+            "ultra": [
                 search_web,
                 get_time_info,
                 open_app,
@@ -114,10 +114,10 @@ class Assistant(Agent):
         }
 
         # Determine variant from environment
-        variant = os.getenv("MARK_VARIANT", "elite").lower()
+        variant = os.getenv("MARK_VARIANT", "ultra").lower()
         if variant not in FEATURE_MAP:
-            print(f"[WARN] Unknown variant '{variant}', defaulting to Elite.")
-            variant = "elite"
+            print(f"[WARN] Unknown variant '{variant}', defaulting to ultra.")
+            variant = "ultra"
 
         # Initialize only allowed tools
         allowed_tools = FEATURE_MAP[variant]
@@ -261,7 +261,7 @@ async def entrypoint(ctx: agents.JobContext):
             await ctx.connect()
             
             # Generate startup message
-            if os.getenv("MARK_VARIANT", "base").lower() == "elite" or os.getenv("MARK_VARIANT", "base").lower() == "premium":
+            if os.getenv("MARK_VARIANT", "core").lower() == "ultra" or os.getenv("MARK_VARIANT", "core").lower() == "pro":
                 await session.generate_reply(instructions=SESSION_INSTRUCTION)
             else:       
                 await session.generate_reply(instructions=SESSION_INSTRUCTION)

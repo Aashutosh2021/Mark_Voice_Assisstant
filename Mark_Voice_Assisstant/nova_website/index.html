@@ -18,7 +18,7 @@
 <body>
 
     <!-- Ambient Background Elements -->
-    <div class="holographic-grid"></div>
+    <!-- <div class="holographic-grid"></div> -->
     <div class="scanlines"></div>
     <div class="vignette"></div>
     
@@ -39,10 +39,6 @@
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </a>
-                <a class="navbar-item" href="#about" id="nav-about-link">
-                    <i class="fas fa-robot"></i>
-                    <span>About</span>
-                </a>
                 <a class="navbar-item" href="/pages/contact">
                     <i class="fas fa-envelope"></i>
                     <span>Contact</span>
@@ -58,6 +54,10 @@
                 <a class="navbar-item" href="/pages/distribution">
                     <i class="fas fa-handshake"></i>
                     <span>Refunds</span>
+                </a>
+                <a class="navbar-item" href="/pages/about">
+                    <i class="fas fa-robot"></i>
+                    <span>About</span>
                 </a>
             </div>
             <div class="navbar-toggle" id="navbar-toggle">
@@ -78,6 +78,28 @@
             </div>
             <p class="subtitle">The Advanced Futuristic Operating System</p>
             <p class="welcome-text">Initiating Secure Download Portal...</p>
+            
+            <!-- System Overview Section -->
+            <div class="system-brief">
+                <div class="brief-header">
+                    <i class="fas fa-microchip brief-icon"></i>
+                    <h3 class="brief-title" data-text="SYSTEM OVERVIEW">SYSTEM OVERVIEW</h3>
+                </div>
+                <div class="brief-content">
+                    <p class="brief-text">
+                        MARK AI is an <span class="highlight-cyan">Intelligent Autonomous Voice Assistant</span> that transforms your PC into a smart companion. 
+                        Execute commands via natural voice, automate complex workflows, generate code, and achieve <span class="highlight-violet">total system dominion</span>.
+                    </p>
+                    <div class="brief-features">
+                        <span class="feature-tag"><i class="fas fa-microphone"></i> Voice Control</span>
+                        <span class="feature-tag"><i class="fas fa-code"></i> AI Coding</span>
+                        <span class="feature-tag"><i class="fas fa-cogs"></i> Automation</span>
+                        <span class="feature-tag"><i class="fas fa-brain"></i> Neural AI</span>
+                    </div>
+                </div>
+                <div class="brief-glow"></div>
+            </div>
+            
             <button class="holo-btn" id="welcome-continue-btn">
                 <span class="btn-content">Enter System <i class="fas fa-chevron-right"></i></span>
                 <span class="btn-glitch"></span>
@@ -87,6 +109,9 @@
 
     <!-- Version Selector Screen -->
     <div class="screen" id="version-selector">
+        <button class="back-btn" id="version-back-btn">
+            <i class="fas fa-chevron-left"></i> RETURN
+        </button>
         <div class="container-3d">
             <h2 class="screen-title" data-text="SELECT SYSTEM VERSION">SELECT SYSTEM VERSION</h2>
             <div class="version-cards">
@@ -217,6 +242,18 @@
                 </div>
             </div>
 
+            <!-- Warning Notice -->
+            <div class="warning-notice">
+                <div class="warning-header">
+                    <i class="fas fa-exclamation-triangle warning-icon"></i>
+                    <span class="warning-label">SYSTEM NOTICE</span>
+                </div>
+                <p class="warning-text">
+                    ⚠️ Some features may collide during concurrent execution. Maybe Certain advanced capabilities are coming soon in future editions. 
+                    We recommend dont be panic after installation.
+                </p>
+            </div>
+
             <button class="holo-btn large-btn" id="get-Mark-btn">
                 <span class="btn-content"><i class="fas fa-download"></i> ACQUIRE MARK AI</span>
                 <span class="btn-glitch"></span>
@@ -276,94 +313,6 @@
 
                 <p class="wa-note">Automated response system active.</p>
             </div>
-        </div>
-    </div>
-
-    <!-- About MARK AI Screen -->
-    <div class="screen" id="about-screen">
-        <button class="back-btn" id="about-back-btn">
-            <i class="fas fa-chevron-left"></i> RETURN
-        </button>
-        <div class="about-content">
-            <h2 class="about-title">ABOUT MARK AI</h2>
-            <p class="about-subtitle">Revolutionary Neural Intelligence System</p>
-
-            <div class="about-grid">
-                <!-- What is MARK AI -->
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <h3>What is MARK AI?</h3>
-                    <p>MARK AI is an advanced neural-net artificial intelligence system designed to revolutionize how users interact with their Windows operating system. Powered by cutting-edge machine learning algorithms, MARK AI provides intuitive voice control, intelligent task automation, and seamless system integration for enhanced productivity.</p>
-                </div>
-
-                <!-- Our Mission -->
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Our Mission</h3>
-                    <p>We are committed to democratizing advanced AI technology and making it accessible to everyone. Our mission is to empower users by providing intelligent, responsive, and intuitive systems that understand and anticipate their needs while respecting their privacy and security.</p>
-                </div>
-
-                <!-- Key Features -->
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-sparkles"></i>
-                    </div>
-                    <h3>Key Features</h3>
-                    <p>Natural voice interaction, Deep file retrieval, Advanced task automation, Real-time web navigation, Intelligent scheduling, System monitoring, Predictive assistance, Multi-language support, and continuous learning capabilities.</p>
-                </div>
-
-                <!-- Technology -->
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-microchip"></i>
-                    </div>
-                    <h3>Advanced Technology</h3>
-                    <p>Built with state-of-the-art neural network architecture, MARK AI leverages natural language processing, machine learning, and deep learning algorithms to provide unprecedented levels of system understanding and interaction capability.</p>
-                </div>
-
-                <!-- Why Choose MARK -->
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Why Choose MARK?</h3>
-                    <p>MARK AI stands out with its intuitive interface, powerful automation capabilities, robust security features, dedicated support, and commitment to continuous improvement. Get more done with less effort through intelligent assistance.</p>
-                </div>
-
-                <!-- Vision -->
-                <div class="about-card">
-                    <div class="about-icon">
-                        <i class="fas fa-eye"></i>
-                    </div>
-                    <h3>Our Vision</h3>
-                    <p>We envision a future where AI assistants are seamlessly integrated into daily workflows, enhancing human capability without compromising autonomy. MARK AI represents the next generation of intelligent computing.</p>
-                </div>
-            </div>
-
-            <!-- Stats Section -->
-            <div class="about-stats">
-                <div class="stat-item">
-                    <div class="stat-number">3+</div>
-                    <p>Editions Available</p>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <p>Advanced Features</p>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <p>Support & Updates</p>
-                </div>
-            </div>
-
-            <!-- CTA Button -->
-            <button class="holo-btn large-btn" id="about-get-started-btn">
-                <span class="btn-content"><i class="fas fa-download"></i> GET STARTED NOW</span>
-            </button>
         </div>
     </div>
 
