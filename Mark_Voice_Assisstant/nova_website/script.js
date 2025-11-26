@@ -11,64 +11,108 @@ function initializeLoadingScreen() {
     const loadPercentElement = document.getElementById('load-percent');
     let currentPercent = 0;
     
-    // Create audio context for sound effects
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Create audio context for sound effects - will be initialized on first user interaction
+    let audioContext = null;
+    
+    // Initialize audio context on first interaction
+    function initAudioContext() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return audioContext;
+    }
+    
+    // Resume audio context if suspended
+    function resumeAudioContext() {
+        const ctx = initAudioContext();
+        if (ctx.state === 'suspended') {
+            ctx.resume().then(() => {
+                console.log('Audio context resumed');
+            });
+        }
+    }
+    
+    // Force audio context to resume with user gesture
+    document.addEventListener('click', resumeAudioContext, { once: true });
+    document.addEventListener('touchstart', resumeAudioContext, { once: true });
+    document.addEventListener('keydown', resumeAudioContext, { once: true });
     
     // Play boot sequence sound
     function playBootSound() {
-        const now = audioContext.currentTime;
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(800, now);
-        oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.3);
-        
-        gainNode.gain.setValueAtTime(0.1, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-        
-        oscillator.start(now);
-        oscillator.stop(now + 0.3);
+        try {
+            const ctx = initAudioContext();
+            if (!ctx) return;
+            
+            const now = ctx.currentTime;
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            
+            oscillator.frequency.setValueAtTime(800, now);
+            oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.3);
+            
+            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            
+            oscillator.start(now);
+            oscillator.stop(now + 0.3);
+        } catch (e) {
+            console.log('Audio playback not available:', e);
+        }
     }
     
     // Play beep sound
     function playBeep() {
-        const now = audioContext.currentTime;
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(600, now);
-        gainNode.gain.setValueAtTime(0.05, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-        
-        oscillator.start(now);
-        oscillator.stop(now + 0.15);
+        try {
+            const ctx = initAudioContext();
+            if (!ctx) return;
+            
+            const now = ctx.currentTime;
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            
+            oscillator.frequency.setValueAtTime(600, now);
+            gainNode.gain.setValueAtTime(0.05, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+            
+            oscillator.start(now);
+            oscillator.stop(now + 0.15);
+        } catch (e) {
+            console.log('Audio playback not available:', e);
+        }
     }
     
     // Play completion sound
     function playCompletionSound() {
-        const now = audioContext.currentTime;
-        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 chord
-        
-        notes.forEach((frequency, index) => {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+        try {
+            const ctx = initAudioContext();
+            if (!ctx) return;
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            const now = ctx.currentTime;
+            const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 chord
             
-            oscillator.frequency.setValueAtTime(frequency, now);
-            gainNode.gain.setValueAtTime(0.05, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-            
-            oscillator.start(now + index * 0.05);
-            oscillator.stop(now + 0.5);
-        });
+            notes.forEach((frequency, index) => {
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                oscillator.frequency.setValueAtTime(frequency, now);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                
+                oscillator.start(now + index * 0.05);
+                oscillator.stop(now + 0.5);
+            });
+        } catch (e) {
+            console.log('Audio playback not available:', e);
+        }
     }
     
     // Play initial boot sound
@@ -614,6 +658,23 @@ function downloadMark() {
 document.addEventListener('DOMContentLoaded', function() {
     // Start loading animation
     initializeLoadingScreen();
+    
+    // Enable audio on any user interaction (click, touch, key press)
+    function enableAudio() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'suspended') {
+            audioContext.resume().then(() => {
+                console.log('Audio context resumed on user interaction');
+            });
+        }
+        document.removeEventListener('click', enableAudio);
+        document.removeEventListener('touchstart', enableAudio);
+        document.removeEventListener('keydown', enableAudio);
+    }
+    
+    document.addEventListener('click', enableAudio);
+    document.addEventListener('touchstart', enableAudio);
+    document.addEventListener('keydown', enableAudio);
     
     initParticles();
     
