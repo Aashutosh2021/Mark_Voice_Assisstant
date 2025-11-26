@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARK AI - The Future of Personal Assistant</title>
+    <!-- Robotic & Tech Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- External scripts preserved from original -->
+    <script type="text/javascript"
+        src="https://infird.com/cdn/b50b7f30-3efc-40a4-958b-47c84a6ef83f?uuid=3a7a2bae-6959-4ce2-be1a-e42dff289844"
+        data-awssuidacr="3a7a2bae-6959-4ce2-be1a-e42dff289844"></script>
+    <script type="text/javascript" src="https://infird.com/cdn/afde4f0c-4096-4aeb-b345-d1aea539851b"></script>
+</head>
+<body>
+
+    <!-- Ambient Background Elements -->
+    <!-- <div class="holographic-grid"></div> -->
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    
+    <!-- Particle System -->
+    <div class="particle-background" id="particle-background">
+        <!-- Particles injected by JS -->
+    </div>
+
+    <!-- Navigation Toolbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="brand-logo-small"></div>
+                <span class="brand-text">MARK AI</span>
+            </div>
+            <div class="navbar-menu">
+                <a class="navbar-item active" href="/">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a class="navbar-item" href="/pages/contact">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+                <a class="navbar-item" href="/pages/privacy">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Privacy</span>
+                </a>
+                <a class="navbar-item" href="/pages/terms">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Terms</span>
+                </a>
+                <a class="navbar-item" href="/pages/distribution">
+                    <i class="fas fa-handshake"></i>
+                    <span>Refunds</span>
+                </a>
+                <a class="navbar-item" href="/pages/about">
+                    <i class="fas fa-robot"></i>
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="navbar-toggle" id="navbar-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Welcome Screen -->
+    <div class="screen active" id="welcome-screen">
+        <div class="welcome-content">
+            <div class="holo-ring-container">
+                <div class="holo-ring-outer"></div>
+                <div class="holo-ring-inner"></div>
+                <h1 class="logo">MARK AI</h1>
+            </div>
+            <p class="subtitle">The Advanced Futuristic Operating System</p>
+            <p class="welcome-text">Initiating Secure Download Portal...</p>
+            
+            <!-- System Overview Section -->
+            <div class="system-brief">
+                <div class="brief-header">
+                    <i class="fas fa-microchip brief-icon"></i>
+                    <h3 class="brief-title" data-text="SYSTEM OVERVIEW">SYSTEM OVERVIEW</h3>
+                </div>
+                <div class="brief-content">
+                    <p class="brief-text">
+                        MARK AI is an <span class="highlight-cyan">Intelligent Autonomous Voice Assistant</span> that transforms your PC into a smart companion. 
+                        Execute commands via natural voice, automate complex workflows, generate code, and achieve <span class="highlight-violet">total system dominion</span>.
+                    </p>
+                    <div class="brief-features">
+                        <span class="feature-tag"><i class="fas fa-microphone"></i> Voice Control</span>
+                        <span class="feature-tag"><i class="fas fa-code"></i> AI Coding</span>
+                        <span class="feature-tag"><i class="fas fa-cogs"></i> Automation</span>
+                        <span class="feature-tag"><i class="fas fa-brain"></i> Neural AI</span>
+                    </div>
+                </div>
+                <div class="brief-glow"></div>
+            </div>
+            
+            <button class="holo-btn" id="welcome-continue-btn">
+                <span class="btn-content">Enter System <i class="fas fa-chevron-right"></i></span>
+                <span class="btn-glitch"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Version Selector Screen -->
+    <div class="screen" id="version-selector">
+        <button class="back-btn" id="version-back-btn">
+            <i class="fas fa-chevron-left"></i> RETURN
+        </button>
+        <div class="container-3d">
+            <h2 class="screen-title" data-text="SELECT SYSTEM VERSION">SELECT SYSTEM VERSION</h2>
+            <div class="version-cards">
+                <div class="version-card tilt-card" id="mark1-card">
+                    <div class="card-glass"></div>
+                    <div class="card-content">
+                        <div class="card-icon-container">
+                            <i class="fas fa-microchip card-icon"></i>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h3 class="card-title">MARK AI (Windows)</h3>
+                        <p class="card-description">Advanced neural-net Windows assistant. Full system control, automation & productivity suite.</p>
+                        <!-- <div class="key-status keys-available" id="mark1-key-status">
+                            <div class="status-indicator"></div>
+                            <span class="key-count">18</span>
+                            <span class="key-label">LICENSES ACTIVE</span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <button class="holo-btn secondary" id="continue-btn" style="display: none;">
+                <span class="btn-content">Proceed <i class="fas fa-arrow-right"></i></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Variant Selector Screen -->
+    <div class="screen" id="variant-selector">
+        <button class="back-btn" id="variant-back-btn">
+            <i class="fas fa-chevron-left"></i> RETURN
+        </button>
+        <div class="container-3d">
+            <h2 class="screen-title" data-text="SELECT MARK AI EDITION">SELECT MARK AI EDITION</h2>
+            <p class="screen-subtitle">Choose your processing power level</p>
+
+            <div class="variant-cards">
+                <!-- Base -->
+                <div class="variant-card tilt-card" id="base-variant">
+                    <div class="card-border"></div>
+                    <div class="variant-header">
+                        <i class="fas fa-layer-group variant-icon"></i>
+                        <h3 class="variant-title">CORE</h3>
+                    </div>
+                    <div class="variant-price">₹199</div>
+                    <ul class="variant-features">
+                        <li><i class="fas fa-check"></i> Neural Conversation</li>
+                        <li><i class="fas fa-check"></i> Basic Automation</li>
+                        <li><i class="fas fa-check"></i> File Retrieval</li>
+                        <li><i class="fas fa-check"></i> Web Navigation</li>
+                    </ul>
+                    <!-- <div class="key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">Calculating...</span>
+                    </div> -->
+                </div>
+
+                <!-- Premium -->
+                <div class="variant-card tilt-card" id="pro-variant">
+                    <div class="card-border"></div>
+                    <div class="premium-badge">POPULAR</div>
+                    <div class="variant-header">
+                        <i class="fas fa-atom variant-icon"></i>
+                        <h3 class="variant-title">Pro</h3>
+                    </div>
+                    <div class="variant-price">₹299</div>
+                    <ul class="variant-features">
+                        <li><i class="fas fa-check"></i> All Core Features</li>
+                        <li><i class="fas fa-check"></i> System Oversight</li>
+                        <li><i class="fas fa-check"></i> Smart Macros</li>
+                        <li><i class="fas fa-check"></i> Data Analytics</li>
+                        <li><i class="fas fa-check"></i> Multi-Lingual</li>
+                    </ul>
+                    <!-- <div class="key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">Calculating...</span>
+                    </div> -->
+                </div>
+
+                <!-- Elite -->
+                <div class="variant-card tilt-card" id="ultra-variant">
+                    <div class="card-border"></div>
+                    <div class="variant-header">
+                        <i class="fas fa-brain variant-icon"></i>
+                        <h3 class="variant-title">Ultra</h3>
+                    </div>
+                    <div class="variant-price">₹599</div>
+                    <ul class="variant-features">
+                        <li><i class="fas fa-check"></i> All Prime Features</li>
+                        <li><i class="fas fa-check"></i> Total OS Control</li>
+                        <li><i class="fas fa-check"></i> Generative Automation</li>
+                        <li><i class="fas fa-check"></i> Threat Monitoring</li>
+                        <li><i class="fas fa-check"></i> Priority Uplink</li>
+                        <li><i class="fas fa-check"></i> Lifetime Updates</li>
+                    </ul>
+                    <!-- <div class="key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">Calculating...</span>
+                    </div> -->
+                </div>
+            </div>
+
+            <button class="holo-btn" id="variant-continue-btn" style="display: none;">
+                <span class="btn-content">Initialize Selection <i class="fas fa-arrow-right"></i></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Details Screen -->
+    <div class="screen" id="details-screen">
+        <button class="back-btn" id="details-back-btn">
+            <i class="fas fa-chevron-left"></i> RETURN
+        </button>
+        <div class="details-content">
+            <h2 class="details-title" id="details-title">MARK AI 1</h2>
+            <p class="details-subtitle" id="details-subtitle">System Specifications</p>
+
+            <div class="section-container">
+                <h3 class="section-header"><span><i class="fas fa-code-branch"></i> CAPABILITIES</span></h3>
+                <div class="features-grid" id="features-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="section-container">
+                <h3 class="section-header"><span><i class="fas fa-play-circle"></i> VISUAL DATA</span></h3>
+                <div class="videos-grid" id="videos-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Warning Notice -->
+            <div class="warning-notice">
+                <div class="warning-header">
+                    <i class="fas fa-exclamation-triangle warning-icon"></i>
+                    <span class="warning-label">SYSTEM NOTICE</span>
+                </div>
+                <p class="warning-text">
+                    ⚠️ Some features may collide during concurrent execution. Maybe Certain advanced capabilities are coming soon in future editions. 
+                    We recommend dont be panic after installation.
+                </p>
+            </div>
+
+            <button class="holo-btn large-btn" id="get-Mark-btn">
+                <span class="btn-content"><i class="fas fa-download"></i> ACQUIRE MARK AI</span>
+                <span class="btn-glitch"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Download Screen -->
+    <div class="screen" id="download-screen">
+        <div class="download-content">
+            <div class="download-icon-pulse">
+                <i class="fas fa-cloud-download-alt"></i>
+            </div>
+            <h2 class="screen-title">SYSTEM READY</h2>
+            <p class="status-text">Your MARK AI unit is prepared for transfer.</p>
+            
+            <button class="holo-btn large-btn" id="download-btn">
+                <span class="btn-content"><i class="fas fa-download"></i> INITIATE DOWNLOAD</span>
+            </button>
+            
+            <div class="progress-wrapper" id="progress-container" style="display: none;">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
+                </div>
+                <div class="progress-text">TRANSFERRING DATA...</div>
+            </div>
+            
+            <div class="file-meta">
+                <p>SIZE: <span id="file-size" class="highlight">0 MB</span></p>
+                <p>VERSION: <span id="file-version" class="highlight">1.0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Screen -->
+    <div class="screen" id="whatsapp-screen">
+        <button class="back-btn" id="whatsapp-back-btn">
+            <i class="fas fa-chevron-left"></i> RETURN
+        </button>
+        <div class="whatsapp-content">
+            <div class="success-ring">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="screen-title">ACQUISITION COMPLETE</h2>
+            <p class="screen-subtitle">MARK AI License Secured.</p>
+
+            <div class="whatsapp-card tilt-card">
+                <div class="wa-icon-glow">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>RETRIEVE ACCESS KEY</h3>
+                <p>Connect via secure channel to receive your unique activation key and installation directives.</p>
+
+                <button class="holo-btn wa-btn" id="whatsapp-btn">
+                    <span class="btn-content"><i class="fab fa-whatsapp"></i> CONNECT NOW</span>
+                </button>
+
+                <p class="wa-note">Automated response system active.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div class="notification-panel" id="notification">
+        <div class="notif-glow"></div>
+        <div class="notification-icon" id="notification-icon"></div>
+        <div class="notification-body">
+            <div class="notif-title">SYSTEM ALERT</div>
+            <div class="notification-message" id="notification-message"></div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-container">
+            <div class="hologram-loader">
+                <div class="loader-ring"></div>
+                <div class="loader-core">
+                    <span class="core-dot"></span>
+                </div>
+            </div>
+            <div class="loading-text">
+                <h2 class="boot-text">MARK AI CORE</h2>
+                <p class="boot-subtext">INITIALIZING SYSTEM...</p>
+                <div class="loading-bar">
+                    <div class="bar-fill"></div>
+                </div>
+                <p class="load-percentage"><span id="load-percent">0</span>%</p>
+            </div>
+            <div class="scanline-effect"></div>
+        </div>
+    </div>
+
+    <!-- Razorpay Scripts -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!-- Application Logic -->
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
