@@ -1,7 +1,0 @@
-E:/Nova/Re_Nova/pycdc/CMakeFiles/pycxx.dir
-E:/Nova/Re_Nova/pycdc/CMakeFiles/pycdas.dir
-E:/Nova/Re_Nova/pycdc/CMakeFiles/pycdc.dir
-E:/Nova/Re_Nova/pycdc/CMakeFiles/check.dir
-E:/Nova/Re_Nova/pycdc/CMakeFiles/INSTALL.dir
-E:/Nova/Re_Nova/pycdc/CMakeFiles/ALL_BUILD.dir
-E:/Nova/Re_Nova/pycdc/CMakeFiles/ZERO_CHECK.dir
