@@ -1,4 +1,3 @@
-
 // Global variables
 let selectedVersion = null;
 let selectedVariant = null;
@@ -6,62 +5,65 @@ let downloadUrl = null;
 let downloadInProgress = false;
 let paymentVerified = false;
 
+// Updated Data Structure for MARK AI Rebranding
 const versions = {
     nova2: {
         base: {
-            title: "Nova 3.0 Base",
-            subtitle: "Basic Windows AI assistant",
+            title: "MARK AI 3.0 Core",
+            subtitle: "Essential Windows Neural Assistant",
             features: [
-                {icon: "🗣️", title: "Human-like conversation", desc: "Natural language processing for realistic conversations"},
-                {icon: "🔍", title: "Basic file search", desc: "Find files on your computer with voice commands"},
-                {icon: "⏱️", title: "Simple automation", desc: "Basic task automation with preset commands"},
-                {icon: "🌐", title: "Web search", desc: "Search the web with your voice"},
-                {icon: "📅", title: "Calendar integration", desc: "Basic calendar management and reminders"}
+                {icon: "🗣️", title: "Neural Conversation", desc: "Natural language processing for realistic human-like interaction"},
+                {icon: "🔍", title: "Deep File Retrieval", desc: "Locate data points across local drives via voice"},
+                {icon: "⏱️", title: "Task Automation", desc: "Streamline workflows with preset command execution"},
+                {icon: "🌐", title: "Web Navigation", desc: "Voice-controlled internet research and data gathering"},
+                {icon: "📅", title: "Temporal Management", desc: "Calendar synchronization and advanced reminders"}
             ],
             videos: [
                 "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
             ],
-            downloadFile: "nova_windows_base_v2.0.exe",
+            // Filename kept consistent with backend expectations or updated if requested
+            // Display logic handles the UI text.
+            downloadFile: "mark_ai_windows_core_v3.0.exe", 
             fileSize: "380.2 MB",
             price: 39900, // ₹399 in paise
             downloadUrl: "https://www.transfernow.net/dl/202509139E8fwBb1"
         },
         premium: {
-            title: "Nova 3.0 Premium",
-            subtitle: "Advanced Windows AI assistant",
+            title: "MARK AI 3.0 Prime",
+            subtitle: "Advanced Windows System Controller",
             features: [
-                {icon: "🖥️", title: "System control", desc: "Control your Windows system with voice commands"},
-                {icon: "🤖", title: "Advanced automation", desc: "Create complex automation workflows with natural language"},
-                {icon: "📊", title: "Productivity tools", desc: "Automated reporting and data analysis"},
-                {icon: "🔍", title: "Smart search", desc: "Advanced file and content search across your system"},
-                {icon: "⌨️", title: "Input automation", desc: "Keyboard and mouse automation with AI assistance"},
-                {icon: "🌍", title: "Multi-language", desc: "Support for multiple languages with high accuracy"}
+                {icon: "🖥️", title: "System Override", desc: "Direct voice control over Windows OS functions"},
+                {icon: "🤖", title: "Logic Automation", desc: "Complex workflow creation via natural language"},
+                {icon: "📊", title: "Data Analytics", desc: "Automated reporting and productivity insight generation"},
+                {icon: "🔍", title: "Omni-Search", desc: "Deep content analysis across file systems"},
+                {icon: "⌨️", title: "Input Emulation", desc: "AI-assisted keyboard and mouse control sequences"},
+                {icon: "🌍", title: "Polyglot Mode", desc: "Real-time multi-language processing and translation"}
             ],
             videos: [
                 "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
             ],
-            downloadFile: "nova_windows_premium_v2.0.exe",
+            downloadFile: "mark_ai_windows_prime_v3.0.exe",
             fileSize: "420.5 MB",
             price: 59900, // ₹599 in paise
             downloadUrl: "https://www.transfernow.net/dl/202509139E8fwBb1"
         },
         elite: {
-            title: "Nova 3.0 Elite",
-            subtitle: "Complete Windows AI solution",
+            title: "MARK AI 3.0 Elite",
+            subtitle: "Ultimate System Integration Solution",
             features: [
-                {icon: "🖥️", title: "Complete system control", desc: "Full control over all aspects of your Windows system"},
-                {icon: "🤖", title: "AI-powered automation", desc: "Create complex automation with natural language instructions"},
-                {icon: "🔍", title: "Smart search & organization", desc: "Find and organize files, emails, and information"},
-                {icon: "📊", title: "Productivity suite", desc: "Automated reporting, data analysis, and presentations"},
-                {icon: "⌨️", title: "Advanced input control", desc: "Full keyboard and mouse automation with AI prediction"},
-                {icon: "🔒", title: "Security monitoring", desc: "Real-time system security monitoring and threat prevention"},
-                {icon: "🚀", title: "Priority support", desc: "Dedicated support team for Elite customers"},
-                {icon: "🔄", title: "All future updates", desc: "Free lifetime updates to all new features"}
+                {icon: "🖥️", title: "Total OS Dominion", desc: "Unrestricted control over all Windows subsystems"},
+                {icon: "🤖", title: "Generative Automation", desc: "Self-improving workflow scripts based on usage patterns"},
+                {icon: "🔍", title: "Neural Organization", desc: "Auto-sorting of files, emails, and unstructured data"},
+                {icon: "📊", title: "Executive Suite", desc: "Full-scale data presentation and automated business intelligence"},
+                {icon: "⌨️", title: "Predictive Input", desc: "Context-aware input prediction and automation"},
+                {icon: "🔒", title: "Sentinel Mode", desc: "Real-time threat monitoring and system integrity defense"},
+                {icon: "🚀", title: "Priority Uplink", desc: "Dedicated support channel for Elite operatives"},
+                {icon: "🔄", title: "Perpetual Updates", desc: "Lifetime access to all future neural modules"}
             ],
             videos: [
                 "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
             ],
-            downloadFile: "nova_windows_elite_v2.0.exe",
+            downloadFile: "mark_ai_windows_elite_v3.0.exe",
             fileSize: "480.3 MB",
             price: 79900, // ₹799 in paise
             downloadUrl: "https://www.transfernow.net/dl/202509139E8fwBb1"
@@ -122,31 +124,37 @@ function updateKeyStatus() {
     } catch (error) {
         console.error('Error updating key status:', error);
         document.querySelectorAll('.key-count').forEach(element => {
-            element.textContent = 'Error';
+            element.textContent = 'Err';
         });
     }
 }
 
-// Initialize particles
+// Initialize particles - UPGRADED VISUALS
 function initParticles() {
     const container = document.getElementById('particle-background');
-    const particleCount = window.innerWidth < 768 ? 30 : 50;
+    if (!container) return;
+    
+    container.innerHTML = ''; // Clear existing
+    const particleCount = window.innerWidth < 768 ? 20 : 40;
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        const size = Math.random() * 2 + 1;
+        // Size variation
+        const size = Math.random() * 3 + 1;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         
+        // Random Position
         particle.style.left = `${Math.random() * 100}%`;
         particle.style.top = `${Math.random() * 100}%`;
         
-        const duration = Math.random() * 10 + 10;
+        // Animation params
+        const duration = Math.random() * 15 + 10;
         particle.style.animationDuration = `${duration}s`;
-        
-        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.opacity = Math.random() * 0.5 + 0.2;
         
         container.appendChild(particle);
     }
@@ -158,22 +166,25 @@ function showNotification(message, type = 'info') {
     const icon = document.getElementById('notification-icon');
     const msg = document.getElementById('notification-message');
     
+    // Reset classes
+    notification.className = 'notification-panel';
+    icon.innerHTML = '';
+
     switch(type) {
         case 'success':
-            icon.className = 'notification-icon fas fa-check-circle';
-            notification.className = 'notification success';
+            icon.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success)"></i>';
+            notification.classList.add('success');
             break;
         case 'warning':
-            icon.className = 'notification-icon fas fa-exclamation-triangle';
-            notification.className = 'notification warning';
+            icon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: var(--warning)"></i>';
+            notification.classList.add('warning');
             break;
         case 'error':
-            icon.className = 'notification-icon fas fa-times-circle';
-            notification.className = 'notification error';
+            icon.innerHTML = '<i class="fas fa-times-circle" style="color: var(--error)"></i>';
+            notification.classList.add('error');
             break;
         default:
-            icon.className = 'notification-icon fas fa-info-circle';
-            notification.className = 'notification';
+            icon.innerHTML = '<i class="fas fa-info-circle" style="color: var(--neon-cyan)"></i>';
     }
     
     msg.textContent = message;
@@ -197,19 +208,19 @@ function showScreen(screenId) {
         updateKeyStatus();
     }
     
-    // Update document title based on screen
+    // Update document title based on screen - REBRANDED
     if (screenId === 'welcome-screen') {
-        document.title = "NOVA AI - The Future of Personal Assistant";
+        document.title = "MARK AI - The Future of Personal Assistant";
     } else if (screenId === 'version-selector') {
-        document.title = "NOVA AI - Select Your Version";
+        document.title = "MARK AI - Select Your Version";
     } else if (screenId === 'variant-selector') {
-        document.title = "NOVA AI - Select Variant";
+        document.title = "MARK AI - Select Edition";
     } else if (screenId === 'details-screen') {
-        document.title = `NOVA AI - ${selectedVariant ? versions.nova2[selectedVariant].title : 'Nova 3.0'} Details`;
+        document.title = `MARK AI - ${selectedVariant ? versions.nova2[selectedVariant].title : 'System Details'}`;
     } else if (screenId === 'download-screen') {
-        document.title = "NOVA AI - Download";
+        document.title = "MARK AI - Download";
     } else if (screenId === 'whatsapp-screen') {
-        document.title = "NOVA AI - Contact via WhatsApp";
+        document.title = "MARK AI - Secure Contact";
     }
 }
 
@@ -219,7 +230,12 @@ function selectVersion(version) {
         card.classList.remove('selected');
     });
     
-    event.target.closest('.version-card').classList.add('selected');
+    // Safely add class if event target exists
+    if(event && event.target) {
+       const card = event.target.closest('.version-card');
+       if(card) card.classList.add('selected');
+    }
+    
     selectedVersion = version;
     
     if (version === 'nova2') {
@@ -228,10 +244,12 @@ function selectVersion(version) {
         return;
     }
     
-    // For Android version, enable continue button
+    // For Android version (if exists), enable continue button
     const continueBtn = document.getElementById('continue-btn');
-    continueBtn.style.display = 'block';
-    continueBtn.disabled = false;
+    if(continueBtn) {
+        continueBtn.style.display = 'block';
+        continueBtn.disabled = false;
+    }
 }
 
 // Select variant function
@@ -240,7 +258,11 @@ function selectVariant(variant) {
         card.classList.remove('selected');
     });
     
-    event.target.closest('.variant-card').classList.add('selected');
+    if(event && event.target) {
+        const card = event.target.closest('.variant-card');
+        if(card) card.classList.add('selected');
+    }
+    
     selectedVariant = variant;
     
     const continueBtn = document.getElementById('variant-continue-btn');
@@ -260,7 +282,7 @@ function goBackFromDetails() {
 // Show version details function
 function showVersionDetails() {
     if (!selectedVersion) {
-        showNotification('Please select a version first', 'error');
+        showNotification('System Error: No Version Selected', 'error');
         return;
     }
     
@@ -268,7 +290,7 @@ function showVersionDetails() {
     if (selectedVersion === 'nova2' && selectedVariant) {
         version = versions.nova2[selectedVariant];
     } else {
-        showNotification('Please select a variant first', 'error');
+        showNotification('System Error: No Variant Selected', 'error');
         return;
     }
     
@@ -309,7 +331,7 @@ async function handlePayment() {
         if (selectedVersion === 'nova2' && selectedVariant) {
             version = versions.nova2[selectedVariant];
         } else {
-            reject(new Error('Invalid version or variant selected'));
+            reject(new Error('Invalid selection parameter'));
             return;
         }
         
@@ -317,22 +339,22 @@ async function handlePayment() {
             key: 'rzp_live_OcHSFiDAu0iMZC',
             amount: version.price,
             currency: 'INR',
-            name: "NOVA AI",
-            description: `Purchase ${version.title} License`,
+            name: "MARK AI", // REBRANDED
+            description: `License Acquisition: ${version.title}`,
             handler: function (response) {
                 console.log('Payment Success:', response);
-                showNotification('Payment successful!', 'success');
+                showNotification('Transaction Authorized.', 'success');
                 paymentVerified = true;
                 resolve(response);
             },
             prefill: {
-                name: "NOVA User",
-                email: "user@nova.ai",
+                name: "MARK AI User",
+                email: "user@markai.sys",
                 contact: "9000000000"
             },
             theme: {
-                color: "#00ffff",
-                backdrop_color: "#0a0a0a"
+                color: "#00f3ff", // Neon Cyan
+                backdrop_color: "#050510"
             },
             method: {
                 upi: true,
@@ -344,50 +366,35 @@ async function handlePayment() {
                 display: {
                     blocks: {
                         utib: {
-                            name: 'Pay using UPI',
-                            instruments: [
-                                {
-                                    method: 'upi'
-                                }
-                            ]
+                            name: 'UPI Interface',
+                            instruments: [{ method: 'upi' }]
                         },
                         other: {
-                            name: 'Other Payment Methods',
+                            name: 'Alternative Channels',
                             instruments: [
-                                {
-                                    method: 'card'
-                                },
-                                {
-                                    method: 'netbanking'
-                                },
-                                {
-                                    method: 'wallet'
-                                }
+                                { method: 'card' },
+                                { method: 'netbanking' },
+                                { method: 'wallet' }
                             ]
                         }
                     },
                     sequence: ['block.utib', 'block.other'],
-                    preferences: {
-                        show_default_blocks: true
-                    }
+                    preferences: { show_default_blocks: true }
                 }
             },
             modal: {
                 ondismiss: function () {
-                    showNotification('Payment window closed', 'warning');
-                    reject(new Error('Payment cancelled by user'));
+                    showNotification('Transaction Aborted.', 'warning');
+                    reject(new Error('User cancelled transaction'));
                 }
             },
-            retry: {
-                enabled: true,
-                max_count: 3
-            }
+            retry: { enabled: true, max_count: 3 }
         };
 
         const rzp = new Razorpay(options);
         rzp.on('payment.failed', function (response) {
             console.error('Payment failed:', response.error);
-            showNotification(`Payment failed: ${response.error.description}`, 'error');
+            showNotification(`Transaction Failed: ${response.error.description}`, 'error');
             reject(new Error(response.error.description));
         });
 
@@ -402,7 +409,7 @@ async function getNova() {
         await handlePayment();
         
         if (!paymentVerified) {
-            showNotification('Payment verification failed', 'error');
+            showNotification('Verification Failure. Access Denied.', 'error');
             return;
         }
         
@@ -411,7 +418,7 @@ async function getNova() {
         
     } catch (error) {
         console.error('Error in getNova:', error);
-        showNotification(error.message, 'error');
+        // Error is usually handled in handlePayment notifications
     }
 }
 
@@ -422,9 +429,9 @@ function openWhatsApp() {
         version = versions.nova2[selectedVariant];
     }
     
-    // Create WhatsApp message
-    const message = `Hello! I just purchased ${version.title}. Please provide my access key and download link.`;
-    const phoneNumber = "919512194144"; // Replace with your WhatsApp business number
+    // Create WhatsApp message - REBRANDED
+    const message = `System Uplink Initiated. I have acquired license for ${version.title}. Requesting activation key and download directives.`;
+    const phoneNumber = "919512194144"; 
     
     // Open WhatsApp
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
@@ -433,12 +440,12 @@ function openWhatsApp() {
 // Download Nova function
 function downloadNova() {
     if (!downloadUrl) {
-        showNotification('Download URL not available', 'error');
+        showNotification('Download Link Unavailable.', 'error');
         return;
     }
     
     if (downloadInProgress) {
-        showNotification('Download already in progress', 'warning');
+        showNotification('Transfer Already In Progress.', 'warning');
         return;
     }
     
@@ -446,20 +453,26 @@ function downloadNova() {
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('progress-bar');
     const downloadBtn = document.getElementById('download-btn');
+    const fileSizeEl = document.getElementById('file-size');
+    const fileVerEl = document.getElementById('file-version');
     
-    // Show progress bar
-    progressContainer.style.display = 'block';
-    downloadBtn.disabled = true;
-    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 15px;"></i>Preparing Download...';
-    
-    // Create a download link element
     let version;
     if (selectedVersion === 'nova2' && selectedVariant) {
         version = versions.nova2[selectedVariant];
     }
     
+    // Update Meta Info
+    fileSizeEl.textContent = version.fileSize;
+    fileVerEl.textContent = "3.0";
+
+    // Show progress bar
+    progressContainer.style.display = 'block';
+    downloadBtn.disabled = true;
+    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 15px;"></i>INITIALIZING...';
+    
+    // Create a download link element
     const link = document.createElement('a');
-    link.href = downloadUrl;
+    link.href = version.downloadUrl; // Use the version specific URL
     link.download = version.downloadFile;
     link.style.display = 'none';
     document.body.appendChild(link);
@@ -481,13 +494,13 @@ function downloadNova() {
             // Clean up the link element
             document.body.removeChild(link);
             
-            downloadBtn.innerHTML = '<i class="fas fa-check" style="margin-right: 15px;"></i>Download Started!';
-            showNotification('Download started! Check your downloads folder.', 'success');
+            downloadBtn.innerHTML = '<i class="fas fa-check" style="margin-right: 15px;"></i>TRANSFER COMPLETE';
+            showNotification('Data Transfer Successful. Check local storage.', 'success');
             
             setTimeout(() => {
                 downloadInProgress = false;
                 downloadBtn.disabled = false;
-                downloadBtn.innerHTML = '<i class="fas fa-download" style="margin-right: 15px;"></i>Download Again';
+                downloadBtn.innerHTML = '<i class="fas fa-download" style="margin-right: 15px;"></i>RE-INITIATE DOWNLOAD';
                 progressContainer.style.display = 'none';
                 progressBar.style.width = '0%';
             }, 3000);
@@ -503,33 +516,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbarToggle = document.getElementById('navbar-toggle');
     const navbarMenu = document.querySelector('.navbar-menu');
     
-    navbarToggle.addEventListener('click', function() {
-        navbarMenu.classList.toggle('active');
-        navbarToggle.classList.toggle('active');
-    });
+    if (navbarToggle) {
+        navbarToggle.addEventListener('click', function() {
+            navbarMenu.classList.toggle('active');
+            navbarToggle.classList.toggle('active');
+        });
+    }
     
     // Close mobile menu when clicking outside
     document.addEventListener('click', function(event) {
-        if (!navbarToggle.contains(event.target) && !navbarMenu.contains(event.target)) {
+        if (navbarToggle && navbarMenu && !navbarToggle.contains(event.target) && !navbarMenu.contains(event.target)) {
             navbarMenu.classList.remove('active');
             navbarToggle.classList.remove('active');
         }
     });
     
     // Event listeners for buttons
-    document.getElementById('welcome-continue-btn').addEventListener('click', () => showScreen('version-selector'));
-    document.getElementById('nova2-card').addEventListener('click', () => selectVersion('nova2'));
-    document.getElementById('continue-btn').addEventListener('click', showVersionDetails);
-    document.getElementById('variant-back-btn').addEventListener('click', () => showScreen('version-selector'));
-    document.getElementById('base-variant').addEventListener('click', () => selectVariant('base'));
-    document.getElementById('premium-variant').addEventListener('click', () => selectVariant('premium'));
-    document.getElementById('elite-variant').addEventListener('click', () => selectVariant('elite'));
-    document.getElementById('variant-continue-btn').addEventListener('click', showVersionDetails);
-    document.getElementById('details-back-btn').addEventListener('click', goBackFromDetails);
-    document.getElementById('get-nova-btn').addEventListener('click', getNova);
-    document.getElementById('whatsapp-btn').addEventListener('click', openWhatsApp);
-    document.getElementById('whatsapp-back-btn').addEventListener('click', () => showScreen('details-screen'));
-    document.getElementById('download-btn').addEventListener('click', downloadNova);
+    // Check if elements exist before adding listeners to prevent console errors
+    const bindClick = (id, func) => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('click', func);
+    };
+
+    bindClick('welcome-continue-btn', () => showScreen('version-selector'));
+    bindClick('nova2-card', () => selectVersion('nova2'));
+    bindClick('continue-btn', showVersionDetails);
+    bindClick('variant-back-btn', () => showScreen('version-selector'));
+    bindClick('base-variant', () => selectVariant('base'));
+    bindClick('premium-variant', () => selectVariant('premium'));
+    bindClick('elite-variant', () => selectVariant('elite'));
+    bindClick('variant-continue-btn', showVersionDetails);
+    bindClick('details-back-btn', goBackFromDetails);
+    bindClick('get-nova-btn', getNova);
+    bindClick('whatsapp-btn', openWhatsApp);
+    bindClick('whatsapp-back-btn', () => showScreen('details-screen'));
+    bindClick('download-btn', downloadNova);
     
     // Load key status on page load
     updateKeyStatus();
