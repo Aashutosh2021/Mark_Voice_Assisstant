@@ -91,6 +91,30 @@ from PyQt5.QtWidgets import (
 
 from Mark_Voice_Assistant import Assistant, entrypoint
 
+# Activation and Firebase imports
+try:
+    import firebase_admin
+    from firebase_admin import credentials, db
+    FIREBASE_AVAILABLE = True
+except ImportError:
+    FIREBASE_AVAILABLE = False
+    print("⚠️ Firebase not available. Activation features disabled.")
+
+import traceback
+
+# Activation constants
+VARIANT_SECRET_MAP = {
+    'core': '7fbe2b643cf544b1a2c979e24ed456a9bba1c688e92e40421e093fa0bd12e8af',
+    'pro': '008abf1b327d67aabc0cb57f5af21c1fa29415a4acf40407b3bfc8e123bf2a93',
+    'ultra': 'a01a30ecbcd19c4972e4fa48bc991f300a224473bb460c93fb5102cb874ac07c'
+}
+
+
+UPGRADE_PATHS = {
+    'core': 'pro',
+    'pro': 'ultra'
+}
+
 # Conditional imports for face recognition
 
 
@@ -1599,7 +1623,7 @@ class MARKInterfaceWindow(QMainWindow):
                     # Same venv ka Python use hoga
                     cmd = [
                         sys.executable,
-                        "Mark_Voice_Assisstant\\Mark_Voice_Assistant.py",
+                        "E:\\Nova\\MARK\\Mark_Voice_Assisstant\\Mark_Voice_Assistant.py",
                         "console",      # <- yeh arg LiveKit CLI ke liye hai
                     ]
                     self.agent_process = subprocess.Popen(cmd)
@@ -1672,12 +1696,16 @@ def get_service_json_path():
 
 def init_firebase_from_embedded(database_url=None):
     """Initializes Firebase from service.json."""
+    if not FIREBASE_AVAILABLE:
+        raise ImportError("Firebase not available")
+        
     path = get_service_json_path()
     if not os.path.exists(path):
         raise FileNotFoundError(f"Firebase service file not found: {path}")
     cred = credentials.Certificate(path)
     firebase_admin.initialize_app(
-        cred, {"databaseURL": database_url or "https://NOVAvoiceassitant-default-rtdb.firebaseio.com"}
+        cred, {"databaseURL": database_url or "https://markai-76197-default-rtdb.firebaseio.com"}
+        # https://markai-76197-default-rtdb.firebaseio.com/
     )
 
 def wait_for_internet():
@@ -1698,11 +1726,292 @@ def wait_for_internet():
         msg_box.exec_()
         return False
 
+def set_env_variable(key, value):
+    """Set environment variable in .env file"""
+    try:
+        env_path = find_dotenv() or '.env'
+        set_key(env_path, key, value)
+        return True
+    except Exception as e:
+        print(f"Error setting env variable {key}: {e}")
+        return False
+
+def get_bool(value):
+    """Convert value to boolean"""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.lower() in ('true', '1', 'yes', 'on')
+    return bool(value)
+
+def safe_message_box(title, message, msg_type='info'):
+    """Safe message box that works with or without QApplication"""
+    try:
+        if msg_type == 'critical':
+            QMessageBox.critical(None, title, message)
+        elif msg_type == 'warning':
+            QMessageBox.warning(None, title, message)
+        elif msg_type == 'question':
+            return QMessageBox.question(None, title, message, QMessageBox.Yes | QMessageBox.No)
+        else:
+            QMessageBox.information(None, title, message)
+    except:
+        # Fallback to console output
+        print(f"[{title}] {message}")
+        if msg_type == 'question':
+            response = input("Continue? (y/n): ").lower()
+            return response.startswith('y')
+        return None
+
+def prompt_access_key():
+    """Prompt user for access key"""
+    try:
+        from PyQt5.QtWidgets import QInputDialog
+        text, ok = QInputDialog.getText(None, 'Access Key Required', 'Enter your MARK access key:')
+        return text.strip() if ok and text.strip() else None
+    except:
+        # Fallback to console input if no QApplication
+        import getpass
+        return input("Enter your MARK access key: ").strip()
+
+def prompt_user_name():
+    """Prompt user for their name"""
+    try:
+        from PyQt5.QtWidgets import QInputDialog
+        text, ok = QInputDialog.getText(None, 'User Name Setup', 'What should MARK call you?\n(This will be used for personalized interactions):')
+        return text.strip() if ok and text.strip() else None
+    except:
+        # Fallback to console input if no QApplication
+        return input("What should MARK call you? ").strip()
+
+def check_and_setup_user_name():
+    """Check if user name is set, if not prompt for it"""
+    current_name = os.getenv('USER_NAME', '').strip()
+    
+    # Remove quotes if they exist (from .env file formatting)
+    if current_name.startswith('"') and current_name.endswith('"'):
+        current_name = current_name[1:-1]
+    elif current_name.startswith("'") and current_name.endswith("'"):
+        current_name = current_name[1:-1]
+    
+    if not current_name:
+        print("🔧 Setting up user profile...")
+        user_name = prompt_user_name()
+        
+        if user_name:
+            # Save to .env file
+            set_env_variable('USER_NAME', user_name)
+            # Set in runtime environment (without quotes)
+            os.environ['USER_NAME'] = user_name
+            print(f"✅ User name set to: {user_name}")
+            return user_name
+        else:
+            print("⚠️ No user name provided, using default greetings")
+            return None
+    else:
+        print(f"👤 User name already set: {current_name}")
+        return current_name
+
+def detect_variant_and_ref(access_key):
+    """Detect variant and get Firebase reference for access key"""
+    if not FIREBASE_AVAILABLE:
+        print("⚠️ Firebase not available, cannot validate access key")
+        return None, None, None
+        
+    try:
+        # Initialize Firebase if not already done
+        if not firebase_admin._apps:
+            init_firebase_from_embedded()
+        
+        # Check each variant
+        for variant in ['core', 'pro', 'ultra']:
+            try:
+                ref = db.reference(f'access_keys/{variant}/{access_key}')
+                record = ref.get()
+                if record:
+                    return variant, ref, record
+            except Exception as e:
+                print(f"Error checking variant {variant}: {e}")
+                continue
+        
+        return None, None, None
+        
+    except Exception as e:
+        print(f"Error in detect_variant_and_ref: {e}")
+        return None, None, None
+
+def prompt_upgrade(current_variant):
+    """Prompt user for upgrade"""
+    upgrade_to = UPGRADE_PATHS.get(current_variant)
+    if not upgrade_to:
+        return False
+    
+    reply = safe_message_box('Upgrade Available', 
+                            f'Upgrade from {current_variant} to {upgrade_to}?', 
+                            'question')
+    return reply == QMessageBox.Yes if reply else False
+
+def process_upgrade(current_variant):
+    """Process upgrade to next variant"""
+    upgrade_to = UPGRADE_PATHS.get(current_variant)
+    if not upgrade_to:
+        return False
+    
+    try:
+        # Set new variant
+        set_env_variable('MARK_VARIANT', upgrade_to)
+        set_env_variable('SYSTEM_CONST_32', VARIANT_SECRET_MAP[upgrade_to])
+        os.environ['MARK_VARIANT'] = upgrade_to
+        os.environ['SYSTEM_CONST_32'] = VARIANT_SECRET_MAP[upgrade_to]
+        
+        safe_message_box('Upgrade Complete', f'Successfully upgraded to {upgrade_to}!', 'info')
+        return True
+    except Exception as e:
+        safe_message_box('Upgrade Failed', f'Upgrade failed: {e}', 'critical')
+        return False
+
+def activation_gate():
+    """Main activation gate function"""
+    access_key = os.getenv('ACCESS_KEY')
+    is_activated = os.getenv('IS_ACTIVATED', '').strip().lower() == 'true'
+    current_variant = os.getenv('MARK_VARIANT', '')
+    
+    try:
+        activation_count = int(os.getenv('ACTIVATION_COUNT', '0').strip() or '0')
+    except ValueError:
+        activation_count = 0
+    
+    # Check if already activated
+    if is_activated and access_key and (activation_count >= 1):
+        secret = os.getenv('SYSTEM_CONST_32', '')
+        if current_variant in VARIANT_SECRET_MAP and secret == VARIANT_SECRET_MAP[current_variant]:
+            # Check and setup user name if not already set
+            check_and_setup_user_name()
+            
+            # Check for upgrade opportunity
+            if UPGRADE_PATHS.get(current_variant) and prompt_upgrade(current_variant):
+                if process_upgrade(current_variant):
+                    return True
+                safe_message_box('Upgrade Cancelled', 'Continuing with your current version.', 'info')
+            return True
+        safe_message_box('Error', 'This is incompatible version.', 'critical')
+        return False
+    
+    # Get access key if not provided
+    if not access_key:
+        access_key = prompt_access_key()
+        if not access_key:
+            safe_message_box('Error', 'Access Key not provided. Exiting.', 'critical')
+            return False
+    
+    # Detect variant and validate key
+    variant, ref, record = detect_variant_and_ref(access_key)
+    if not variant:
+        safe_message_box('Error', f'Key \'{access_key}\' not found in any variant.', 'critical')
+        return False
+    
+    # Check if key is already used
+    if get_bool(record.get('isUsed')):
+        safe_message_box('Error', f'Key \'{access_key}\' is already used on another device.', 'critical')
+        return False
+    
+    # Mark key as used
+    try:
+        ref.update({'isUsed': True})
+    except Exception as e:
+        safe_message_box('Error', f'Failed to update key on server: {e}', 'critical')
+        return False
+    
+    # Set environment variables
+    set_env_variable('ACCESS_KEY', access_key)
+    set_env_variable('IS_ACTIVATED', 'true')
+    set_env_variable('ACTIVATION_COUNT', '1')
+    set_env_variable('MARK_VARIANT', variant)
+    set_env_variable('SYSTEM_CONST_32', VARIANT_SECRET_MAP[variant])
+    
+    # Set runtime environment
+    os.environ['ACCESS_KEY'] = access_key
+    os.environ['IS_ACTIVATED'] = 'true'
+    os.environ['ACTIVATION_COUNT'] = '1'
+    os.environ['MARK_VARIANT'] = variant
+    os.environ['SYSTEM_CONST_32'] = VARIANT_SECRET_MAP[variant]
+    
+    # Setup user name for personalized interactions
+    user_name = check_and_setup_user_name()
+    
+    # Show personalized success message
+    if user_name:
+        safe_message_box('Activation Success', f'Welcome {user_name}! MARK {variant} activated successfully!', 'info')
+    else:
+        safe_message_box('Activation Success', f'MARK {variant} activated successfully!', 'info')
+    
+    return True
+
+def safe_activation_gate():
+    """Safe wrapper for activation gate"""
+    # If Firebase is not available, skip activation
+    if not FIREBASE_AVAILABLE:
+        print("⚠️ Firebase not available, running in development mode")
+        # Set default environment variables for development
+        os.environ['MARK_VARIANT'] = 'core'  # Default to core for development
+        os.environ['IS_ACTIVATED'] = 'true'
+        
+        # Setup user name in development mode
+        check_and_setup_user_name()
+        
+        return (True, 'development')
+    
+    try:
+        if activation_gate():
+            return (True, 'activated')
+    except Exception as e:
+        print('Unexpected Activation Error:', e)
+        print(traceback.format_exc())
+        QMessageBox.warning(None, 'Warning', 
+                           'Firebase se connect karte time error aaya.\nApp fallback mode me start ho raha hai.')
+        return (False, 'fallback')
+    return (False, 'failed')
+
+def console_pre_activation():
+    """Console-only pre-activation that runs before QApplication."""
+    print("🚀 MARK Voice Assistant - Initializing...")
+    
+    # Load environment variables
+    load_dotenv()
+    
+    # Check if already activated
+    if os.environ.get('IS_ACTIVATED', 'false').lower() == 'true':
+        variant = os.environ.get('MARK_VARIANT', 'core')
+        print(f"✅ Already activated as {variant.title()} Edition")
+        return True
+    
+    # Development mode bypass
+    if os.environ.get('DEVELOPMENT_MODE', 'false').lower() == 'true':
+        print("🔧 Development mode active - All features unlocked")
+        os.environ['IS_ACTIVATED'] = 'true'
+        os.environ['MARK_VARIANT'] = 'core'
+        return True
+    
+    # Check for access key - if not found, let GUI handle it
+    access_key = os.environ.get('ACCESS_KEY') or os.environ.get('MARK_ACCESS_KEY')
+    
+    if not access_key:
+        print("⏳ No access key found - GUI will prompt for activation")
+        return True
+    
+    print(f"🔍 Access key found - will validate during GUI activation...")
+    return True
+
 def main():
     """Main entry point for the application."""
     if len(sys.argv) > 1 and sys.argv[1].lower() == "console":
         agents_cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
         return
+
+    # Console pre-activation (before QApplication)
+    if not console_pre_activation():
+        print("❌ Pre-activation failed. Exiting.")
+        sys.exit(1)
 
     app = QApplication(sys.argv)
     
@@ -1714,10 +2023,16 @@ def main():
     if not wait_for_internet():
         sys.exit(1)
 
-    # Placeholder for activation gate and user name logic
-    # if not activation_gate():
-    #     sys.exit(1)
-    # ensure_user_name()
+    # Full activation gate (with GUI)
+    activation_result, status = safe_activation_gate()
+    if not activation_result:
+        if status == 'failed':
+            QMessageBox.critical(None, 'Activation Failed', 'Could not activate MARK. Exiting.')
+            sys.exit(1)
+        elif status == 'fallback':
+            QMessageBox.warning(None, 'Fallback Mode', 'Running in fallback mode with limited features.')
+    else:
+        print(f"✅ MARK activated successfully with status: {status}")
 
     window = MARKInterfaceWindow()
     window.show()

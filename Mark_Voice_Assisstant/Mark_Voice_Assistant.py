@@ -15,7 +15,10 @@ from prompts import (
     AGENT_INSTRUCTION,
     SESSION_INSTRUCTION,
     AGENT_INSTRUCTION_FOR_TOOLS,
-    SESSION_INSTRUCTION_2
+    SESSION_INSTRUCTION_2,
+    save_user_message,
+    save_assistant_message,
+    get_today_reminder_message_from_db
 )
 
 from tools import (
@@ -114,10 +117,10 @@ class Assistant(Agent):
         }
 
         # Determine variant from environment
-        variant = os.getenv("MARK_VARIANT", "ultra").lower()
+        variant = os.getenv("MARK_VARIANT", "core").lower()
         if variant not in FEATURE_MAP:
-            print(f"[WARN] Unknown variant '{variant}', defaulting to ultra.")
-            variant = "ultra"
+            print(f"[WARN] Unknown variant '{variant}', defaulting to core.")
+            variant = "core"
 
         # Initialize only allowed tools
         allowed_tools = FEATURE_MAP[variant]
@@ -202,6 +205,14 @@ class Assistant(Agent):
         # Log conversation
         print(f"\n🗣️ USER: {user_message}")
         print(f"🤖 ASSISTANT: {assistant_message}")
+        
+        # Save to memory.json for persistent chat history
+        if user_message and user_message != "[no user input]":
+            save_user_message(user_message)
+        if assistant_message and assistant_message != "[no assistant reply]":
+            save_assistant_message(assistant_message)
+        
+        # Also log to text file (existing functionality)
         await self._log_conversation("User", user_message)
         await self._log_conversation("Assistant", assistant_message)
 
