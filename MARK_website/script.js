@@ -414,6 +414,9 @@ function selectVariant(variant) {
     const continueBtn = document.getElementById('variant-continue-btn');
     continueBtn.style.display = 'block';
     continueBtn.disabled = false;
+    
+    // Update pay button visibility
+    updatePayButton();
 }
 
 // Go back from details function
@@ -468,6 +471,9 @@ function showVersionDetails() {
     });
     
     showScreen('details-screen');
+    
+    // Update pay button visibility on details screen
+    updatePayButton();
 }
 
 // Handle payment function
@@ -482,68 +488,49 @@ async function handlePayment() {
         }
         
         const options = {
-            key: 'YOUR_RAZORPAY_KEY_HERE',
-            amount: version.price,
-            currency: 'INR',
-            name: "MARK AI", // REBRANDED
-            description: `License Acquisition: ${version.title}`,
-            handler: function (response) {
+            "key": "rzp_test_1DP5mmOlF5G5ag", // Enter the Key ID generated from the Dashboard
+            "amount": version.price.toString(), // Amount is in currency subunits (paise)
+            "currency": "INR",
+            "name": "MARK AI", // Business name
+            "description": `License Acquisition: ${version.title}`,
+            "image": "https://example.com/your_logo", // Add your logo URL
+            // "order_id": "order_9A33XWu170gUtm", // This would be generated from backend
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/", // Your callback URL
+            "prefill": { // Auto-fill customer's contact information
+                "name": "MARK AI User", // Customer's name
+                "email": "user@markai.sys", // Customer's email
+                "contact": "9000000000" // Customer's phone number
+            },
+            "notes": {
+                "address": "MARK AI Corporate Office"
+            },
+            "theme": {
+                "color": "#00f3ff" // Neon Cyan theme
+            },
+            "handler": function (response) {
                 console.log('Payment Success:', response);
-                showNotification('Transaction Authorized.', 'success');
+                showNotification('Transaction Authorized. Payment ID: ' + response.razorpay_payment_id, 'success');
                 paymentVerified = true;
                 resolve(response);
             },
-            prefill: {
-                name: "MARK AI User",
-                email: "user@markai.sys",
-                contact: "9000000000"
-            },
-            theme: {
-                color: "#00f3ff", // Neon Cyan
-                backdrop_color: "#050510"
-            },
-            method: {
-                upi: true,
-                card: true,
-                netbanking: true,
-                wallet: true
-            },
-            config: {
-                display: {
-                    blocks: {
-                        utib: {
-                            name: 'UPI Interface',
-                            instruments: [{ method: 'upi' }]
-                        },
-                        other: {
-                            name: 'Alternative Channels',
-                            instruments: [
-                                { method: 'card' },
-                                { method: 'netbanking' },
-                                { method: 'wallet' }
-                            ]
-                        }
-                    },
-                    sequence: ['block.utib', 'block.other'],
-                    preferences: { show_default_blocks: true }
-                }
-            },
-            modal: {
-                ondismiss: function () {
+            "modal": {
+                "ondismiss": function () {
                     showNotification('Transaction Aborted.', 'warning');
                     reject(new Error('User cancelled transaction'));
                 }
-            },
-            retry: { enabled: true, max_count: 3 }
+            }
         };
 
         const rzp = new Razorpay(options);
+        
+        // Handle payment failure
         rzp.on('payment.failed', function (response) {
             console.error('Payment failed:', response.error);
             showNotification(`Transaction Failed: ${response.error.description}`, 'error');
             reject(new Error(response.error.description));
         });
 
+        // Open Razorpay checkout
         rzp.open();
     });
 }
@@ -719,9 +706,94 @@ document.addEventListener('DOMContentLoaded', function() {
     bindClick('whatsapp-back-btn', () => showScreen('details-screen'));
     bindClick('download-btn', downloadMark);
     
+    // Initialize Razorpay payment integration
+    initializeRazorpay();
+    
     // Load key status on page load
     updateKeyStatus();
 });
+
+// Direct Razorpay Payment Integration
+function initializeRazorpay() {
+    const rzpButton = document.getElementById('rzp-button1');
+    if (!rzpButton) return;
+    
+    rzpButton.onclick = function(e) {
+        e.preventDefault();
+        
+        // Show the pay button only when a variant is selected
+        if (!selectedVersion || !selectedVariant) {
+            showNotification('Please select a version and variant first', 'warning');
+            return;
+        }
+        
+        let version;
+        if (selectedVersion === 'mark1' && selectedVariant) {
+            version = versions.mark1[selectedVariant];
+        } else {
+            showNotification('Invalid selection', 'error');
+            return;
+        }
+        
+        const options = {
+            "key": "rzp_test_1DP5mmOlF5G5ag", // Enter the Key ID generated from the Dashboard
+            "amount": version.price.toString(), // Amount is in currency subunits
+            "currency": "INR",
+            "name": "MARK AI", // Your business name
+            "description": `License: ${version.title}`,
+            "image": "https://example.com/your_logo",
+            // "order_id": "order_9A33XWu170gUtm", // Pass the order_id obtained in backend
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "prefill": { // Auto-fill customer's contact information
+                "name": "MARK AI User",
+                "email": "user@markai.sys",
+                "contact": "9000000000"
+            },
+            "notes": {
+                "address": "MARK AI Corporate Office"
+            },
+            "theme": {
+                "color": "#00f3ff"
+            },
+            "handler": function (response) {
+                console.log('Payment Success:', response);
+                showNotification('Payment Successful! Payment ID: ' + response.razorpay_payment_id, 'success');
+                paymentVerified = true;
+                
+                // Redirect to WhatsApp or download screen
+                setTimeout(() => {
+                    showScreen('whatsapp-screen');
+                }, 2000);
+            },
+            "modal": {
+                "ondismiss": function () {
+                    showNotification('Payment Cancelled', 'warning');
+                }
+            }
+        };
+        
+        const rzp1 = new Razorpay(options);
+        
+        rzp1.on('payment.failed', function (response) {
+            console.error('Payment failed:', response.error);
+            showNotification(`Payment Failed: ${response.error.description}`, 'error');
+        });
+        
+        rzp1.open();
+    };
+}
+
+// Show/hide pay button based on selection
+function updatePayButton() {
+    const rzpButton = document.getElementById('rzp-button1');
+    if (!rzpButton) return;
+    
+    if (selectedVersion && selectedVariant) {
+        rzpButton.style.display = 'block';
+    } else {
+        rzpButton.style.display = 'none';
+    }
+}
 
 // Make functions global
 window.showScreen = showScreen;
@@ -732,3 +804,5 @@ window.showVersionDetails = showVersionDetails;
 window.getMark = getMark;
 window.openWhatsApp = openWhatsApp;
 window.downloadMark = downloadMark;
+window.initializeRazorpay = initializeRazorpay;
+window.updatePayButton = updatePayButton;
