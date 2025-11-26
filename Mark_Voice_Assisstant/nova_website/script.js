@@ -5,6 +5,108 @@ let downloadUrl = null;
 let downloadInProgress = false;
 let paymentVerified = false;
 
+// Loading Animation Setup
+function initializeLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    const loadPercentElement = document.getElementById('load-percent');
+    let currentPercent = 0;
+    
+    // Create audio context for sound effects
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Play boot sequence sound
+    function playBootSound() {
+        const now = audioContext.currentTime;
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, now);
+        oscillator.frequency.exponentialRampToValueAtTime(200, now + 0.3);
+        
+        gainNode.gain.setValueAtTime(0.1, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        
+        oscillator.start(now);
+        oscillator.stop(now + 0.3);
+    }
+    
+    // Play beep sound
+    function playBeep() {
+        const now = audioContext.currentTime;
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(600, now);
+        gainNode.gain.setValueAtTime(0.05, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        
+        oscillator.start(now);
+        oscillator.stop(now + 0.15);
+    }
+    
+    // Play completion sound
+    function playCompletionSound() {
+        const now = audioContext.currentTime;
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 chord
+        
+        notes.forEach((frequency, index) => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, now);
+            gainNode.gain.setValueAtTime(0.05, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            
+            oscillator.start(now + index * 0.05);
+            oscillator.stop(now + 0.5);
+        });
+    }
+    
+    // Play initial boot sound
+    playBootSound();
+    
+    // Simulate percentage loading
+    const loadingInterval = setInterval(() => {
+        currentPercent += Math.random() * 40;
+        if (currentPercent > 100) currentPercent = 100;
+        
+        loadPercentElement.textContent = Math.floor(currentPercent);
+        
+        // Play beep at certain intervals
+        if (Math.floor(currentPercent) % 20 === 0 && currentPercent !== 0) {
+            playBeep();
+        }
+    }, 300);
+    
+    // Complete loading after 3 seconds
+    setTimeout(() => {
+        clearInterval(loadingInterval);
+        currentPercent = 100;
+        loadPercentElement.textContent = '100';
+        playCompletionSound();
+        
+        // Fade out loading screen
+        setTimeout(() => {
+            loadingScreen.classList.add('fade-out');
+            
+            // Show main content
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                showScreen('welcome-screen');
+            }, 1000);
+        }, 500);
+    }, 3000);
+}
+
 // Updated Data Structure for MARK AI Rebranding
 const versions = {
     mark1: {
@@ -510,6 +612,9 @@ function downloadMark() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    // Start loading animation
+    initializeLoadingScreen();
+    
     initParticles();
     
     // Mobile menu toggle
