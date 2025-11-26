@@ -19,7 +19,7 @@ const versions = {
                 {icon: "📅", title: "Temporal Management", desc: "Calendar synchronization and advanced reminders"}
             ],
             videos: [
-                "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
+                "https://www.youtube.com/embed/xxxxxxxxxxx",  
             ],
             // Filename kept consistent with backend expectations or updated if requested
             // Display logic handles the UI text.
@@ -40,11 +40,11 @@ const versions = {
                 {icon: "🌍", title: "Polyglot Mode", desc: "Real-time multi-language processing and translation"}
             ],
             videos: [
-                "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
+                "https://www.youtube.com/embed/xxxxxxxx",  
             ],
             downloadFile: "mark_ai_windows_pro_v3.0.exe",
             fileSize: "xxx.xx MB",
-            price: 29900, // ₹299 in paise
+            price: 39900, // ₹399 in paise
             downloadUrl: "download url"
         },
         ultra: {
@@ -336,7 +336,7 @@ async function handlePayment() {
         }
         
         const options = {
-            key: 'rzp_live_OcHSFiDAu0iMZC',
+            key: 'YOUR_RAZORPAY_KEY_HERE',
             amount: version.price,
             currency: 'INR',
             name: "MARK AI", // REBRANDED
