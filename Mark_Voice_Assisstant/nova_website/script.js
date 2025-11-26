@@ -717,6 +717,9 @@ document.addEventListener('DOMContentLoaded', function() {
     bindClick('whatsapp-btn', openWhatsApp);
     bindClick('whatsapp-back-btn', () => showScreen('details-screen'));
     bindClick('download-btn', downloadMark);
+    bindClick('about-back-btn', () => showScreen('welcome-screen'));
+    bindClick('nav-about-link', () => showScreen('about-screen'));
+    bindClick('about-get-started-btn', () => showScreen('version-selector'));
     
     // Load key status on page load
     updateKeyStatus();
