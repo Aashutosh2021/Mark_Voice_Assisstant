@@ -7,9 +7,9 @@ let paymentVerified = false;
 
 // Updated Data Structure for MARK AI Rebranding
 const versions = {
-    nova2: {
+    mark1: {
         base: {
-            title: "MARK AI 3.0 Core",
+            title: "MARK AI 1 Core",
             subtitle: "Essential Windows Neural Assistant",
             features: [
                 {icon: "🗣️", title: "Neural Conversation", desc: "Natural language processing for realistic human-like interaction"},
@@ -24,12 +24,12 @@ const versions = {
             // Filename kept consistent with backend expectations or updated if requested
             // Display logic handles the UI text.
             downloadFile: "mark_ai_windows_core_v3.0.exe", 
-            fileSize: "380.2 MB",
-            price: 39900, // ₹399 in paise
-            downloadUrl: "https://www.transfernow.net/dl/202509139E8fwBb1"
+            fileSize: "xxx.xx MB",
+            price: 19900, // ₹199 in paise
+            downloadUrl: "download url"
         },
-        premium: {
-            title: "MARK AI 3.0 Prime",
+        pro: {
+            title: "MARK AI 1 Pro",
             subtitle: "Advanced Windows System Controller",
             features: [
                 {icon: "🖥️", title: "System Override", desc: "Direct voice control over Windows OS functions"},
@@ -42,13 +42,13 @@ const versions = {
             videos: [
                 "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
             ],
-            downloadFile: "mark_ai_windows_prime_v3.0.exe",
-            fileSize: "420.5 MB",
-            price: 59900, // ₹599 in paise
-            downloadUrl: "https://www.transfernow.net/dl/202509139E8fwBb1"
+            downloadFile: "mark_ai_windows_pro_v3.0.exe",
+            fileSize: "xxx.xx MB",
+            price: 29900, // ₹299 in paise
+            downloadUrl: "download url"
         },
-        elite: {
-            title: "MARK AI 3.0 Elite",
+        ultra: {
+            title: "MARK AI 1 Ultra",
             subtitle: "Ultimate System Integration Solution",
             features: [
                 {icon: "🖥️", title: "Total OS Dominion", desc: "Unrestricted control over all Windows subsystems"},
@@ -57,16 +57,16 @@ const versions = {
                 {icon: "📊", title: "Executive Suite", desc: "Full-scale data presentation and automated business intelligence"},
                 {icon: "⌨️", title: "Predictive Input", desc: "Context-aware input prediction and automation"},
                 {icon: "🔒", title: "Sentinel Mode", desc: "Real-time threat monitoring and system integrity defense"},
-                {icon: "🚀", title: "Priority Uplink", desc: "Dedicated support channel for Elite operatives"},
+                {icon: "🚀", title: "Priority Uplink", desc: "Dedicated support channel for ultra operatives"},
                 {icon: "🔄", title: "Perpetual Updates", desc: "Lifetime access to all future neural modules"}
             ],
             videos: [
-                "https://www.youtube.com/embed/OowjNSa3bsE?si=i8LJJBuHlpcIk7Ju",  
+                "https://www.youtube.com/embed/xxxxxxxx",  
             ],
-            downloadFile: "mark_ai_windows_elite_v3.0.exe",
-            fileSize: "480.3 MB",
-            price: 79900, // ₹799 in paise
-            downloadUrl: "https://www.transfernow.net/dl/202509139E8fwBb1"
+            downloadFile: "mark_ai_windows_ultra_v3.0.exe",
+            fileSize: "xxx.xx MB",
+            price: 59900, // ₹599 in paise
+            downloadUrl: "download url"
         }
     }
 };
@@ -80,22 +80,22 @@ function getRemainingKeysCount() {
 // Function to update key status display
 function updateKeyStatus() {
     try {
-        const nova2Count = getRemainingKeysCount();
+        const mark1Count = getRemainingKeysCount();
         
-        const nova2Status = document.getElementById('nova2-key-status');
-        if (nova2Status) {
-            const countElement = nova2Status.querySelector('.key-count');
-            countElement.textContent = nova2Count;
+        const mark1Status = document.getElementById('mark1-key-status');
+        if (mark1Status) {
+            const countElement = mark1Status.querySelector('.key-count');
+            countElement.textContent = mark1Count;
             
-            if (nova2Count > 10) {
-                nova2Status.classList.add('keys-available');
-                nova2Status.classList.remove('keys-low', 'keys-none');
-            } else if (nova2Count > 0) {
-                nova2Status.classList.add('keys-low');
-                nova2Status.classList.remove('keys-available', 'keys-none');
+            if (mark1Count > 10) {
+                mark1Status.classList.add('keys-available');
+                mark1Status.classList.remove('keys-low', 'keys-none');
+            } else if (mark1Count > 0) {
+                mark1Status.classList.add('keys-low');
+                mark1Status.classList.remove('keys-available', 'keys-none');
             } else {
-                nova2Status.classList.add('keys-none');
-                nova2Status.classList.remove('keys-available', 'keys-low');
+                mark1Status.classList.add('keys-none');
+                mark1Status.classList.remove('keys-available', 'keys-low');
             }
         }
         
@@ -216,7 +216,7 @@ function showScreen(screenId) {
     } else if (screenId === 'variant-selector') {
         document.title = "MARK AI - Select Edition";
     } else if (screenId === 'details-screen') {
-        document.title = `MARK AI - ${selectedVariant ? versions.nova2[selectedVariant].title : 'System Details'}`;
+        document.title = `MARK AI - ${selectedVariant ? versions.mark1[selectedVariant].title : 'System Details'}`;
     } else if (screenId === 'download-screen') {
         document.title = "MARK AI - Download";
     } else if (screenId === 'whatsapp-screen') {
@@ -238,7 +238,7 @@ function selectVersion(version) {
     
     selectedVersion = version;
     
-    if (version === 'nova2') {
+    if (version === 'mark1') {
         // For Windows version, show variant selector
         showScreen('variant-selector');
         return;
@@ -272,7 +272,7 @@ function selectVariant(variant) {
 
 // Go back from details function
 function goBackFromDetails() {
-    if (selectedVersion === 'nova2') {
+    if (selectedVersion === 'mark1') {
         showScreen('variant-selector');
     } else {
         showScreen('version-selector');
@@ -287,8 +287,8 @@ function showVersionDetails() {
     }
     
     let version;
-    if (selectedVersion === 'nova2' && selectedVariant) {
-        version = versions.nova2[selectedVariant];
+    if (selectedVersion === 'mark1' && selectedVariant) {
+        version = versions.mark1[selectedVariant];
     } else {
         showNotification('System Error: No Variant Selected', 'error');
         return;
@@ -328,8 +328,8 @@ function showVersionDetails() {
 async function handlePayment() {
     return new Promise((resolve, reject) => {
         let version;
-        if (selectedVersion === 'nova2' && selectedVariant) {
-            version = versions.nova2[selectedVariant];
+        if (selectedVersion === 'mark1' && selectedVariant) {
+            version = versions.mark1[selectedVariant];
         } else {
             reject(new Error('Invalid selection parameter'));
             return;
@@ -402,8 +402,8 @@ async function handlePayment() {
     });
 }
 
-// Get Nova function
-async function getNova() {
+// Get Mark function
+async function getMark() {
     try {
         // First handle payment
         await handlePayment();
@@ -417,7 +417,7 @@ async function getNova() {
         showScreen('whatsapp-screen');
         
     } catch (error) {
-        console.error('Error in getNova:', error);
+        console.error('Error in getMark:', error);
         // Error is usually handled in handlePayment notifications
     }
 }
@@ -425,20 +425,20 @@ async function getNova() {
 // Open WhatsApp function
 function openWhatsApp() {
     let version;
-    if (selectedVersion === 'nova2' && selectedVariant) {
-        version = versions.nova2[selectedVariant];
+    if (selectedVersion === 'mark' && selectedVariant) {
+        version = versions.mark1[selectedVariant];
     }
     
     // Create WhatsApp message - REBRANDED
     const message = `System Uplink Initiated. I have acquired license for ${version.title}. Requesting activation key and download directives.`;
-    const phoneNumber = "919512194144"; 
+    const phoneNumber = "919798022573"; 
     
     // Open WhatsApp
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
-// Download Nova function
-function downloadNova() {
+// Download Mark function
+function downloadMark() {
     if (!downloadUrl) {
         showNotification('Download Link Unavailable.', 'error');
         return;
@@ -457,8 +457,8 @@ function downloadNova() {
     const fileVerEl = document.getElementById('file-version');
     
     let version;
-    if (selectedVersion === 'nova2' && selectedVariant) {
-        version = versions.nova2[selectedVariant];
+    if (selectedVersion === 'mark1' && selectedVariant) {
+        version = versions.mark1[selectedVariant];
     }
     
     // Update Meta Info
@@ -539,18 +539,18 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     bindClick('welcome-continue-btn', () => showScreen('version-selector'));
-    bindClick('nova2-card', () => selectVersion('nova2'));
+    bindClick('mark1-card', () => selectVersion('mark1'));
     bindClick('continue-btn', showVersionDetails);
     bindClick('variant-back-btn', () => showScreen('version-selector'));
     bindClick('base-variant', () => selectVariant('base'));
-    bindClick('premium-variant', () => selectVariant('premium'));
-    bindClick('elite-variant', () => selectVariant('elite'));
+    bindClick('pro-variant', () => selectVariant('pro'));
+    bindClick('ultra-variant', () => selectVariant('ultra'));
     bindClick('variant-continue-btn', showVersionDetails);
     bindClick('details-back-btn', goBackFromDetails);
-    bindClick('get-nova-btn', getNova);
+    bindClick('get-Mark-btn', getMark);
     bindClick('whatsapp-btn', openWhatsApp);
     bindClick('whatsapp-back-btn', () => showScreen('details-screen'));
-    bindClick('download-btn', downloadNova);
+    bindClick('download-btn', downloadMark);
     
     // Load key status on page load
     updateKeyStatus();
@@ -562,6 +562,6 @@ window.selectVersion = selectVersion;
 window.selectVariant = selectVariant;
 window.goBackFromDetails = goBackFromDetails;
 window.showVersionDetails = showVersionDetails;
-window.getNova = getNova;
+window.getMark = getMark;
 window.openWhatsApp = openWhatsApp;
-window.downloadNova = downloadNova;
+window.downloadMark = downloadMark;
