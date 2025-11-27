@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Policy - MARK AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .policy-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+        .policy-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .policy-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        .policy-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(0, 20, 40, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(139, 69, 255, 0.3);
+        }
+        .policy-section h2 {
+            color: var(--neon-purple);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .policy-section h3 {
+            color: var(--accent-gold);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4rem;
+            margin: 20px 0 10px;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+        .highlight-box {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .highlight-box h4 {
+            color: var(--neon-cyan);
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .digital-badge {
+            background: linear-gradient(45deg, var(--neon-purple), var(--accent-gold));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .delivery-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .delivery-step {
+            background: rgba(139, 69, 255, 0.1);
+            border: 1px solid var(--neon-purple);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .step-number {
+            background: var(--neon-purple);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+        }
+        .support-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .support-box h4 {
+            color: var(--accent-gold);
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient Background Elements -->
+    <!-- <div class="holographic-grid"></div> -->
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    
+    <!-- Particle System -->
+    <div class="particle-background" id="particle-background">
+        <!-- Particles injected by JS -->
+    </div>
+
+    <!-- Navigation Toolbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="brand-logo-small"></div>
+                <span class="brand-text">MARK AI</span>
+            </div>
+            <div class="navbar-menu">
+                <a class="navbar-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a class="navbar-item" href="about.html">
+                    <i class="fas fa-robot"></i>
+                    <span>About</span>
+                </a>
+                <a class="navbar-item" href="contact.html">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+                <a class="navbar-item" href="privacy.html">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Privacy</span>
+                </a>
+                <a class="navbar-item" href="terms.html">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Terms</span>
+                </a>
+                <a class="navbar-item" href="refund.html">
+                    <i class="fas fa-handshake"></i>
+                    <span>Refunds</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="policy-container">
+        <a href="../index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div class="policy-header">
+            <h1 class="policy-title">Shipping Policy</h1>
+            <p>Last Updated: November 27, 2025</p>
+        </div>
+
+        <div class="highlight-box">
+            <h4><i class="fas fa-download"></i> Digital Product - No Physical Shipping</h4>
+            <p>MARK AI is a <strong>100% digital software product</strong>. There are no physical items to ship, package, or deliver. Everything is delivered instantly through digital download.</p>
+            <div class="digital-badge">INSTANT DELIVERY</div>
+            <div class="digital-badge">NO SHIPPING COSTS</div>
+            <div class="digital-badge">GLOBAL ACCESS</div>
+        </div>
+
+        <div class="policy-section">
+            <h2>1. Digital Delivery Process</h2>
+            <p>MARK AI is delivered electronically immediately after successful payment confirmation:</p>
+            
+            <div class="delivery-steps">
+                <div class="delivery-step">
+                    <div class="step-number">1</div>
+                    <h3>Payment Confirmation</h3>
+                    <p>Razorpay processes your payment securely and sends confirmation</p>
+                </div>
+                <div class="delivery-step">
+                    <div class="step-number">2</div>
+                    <h3>Instant Access</h3>
+                    <p>Download links and license key are generated automatically</p>
+                </div>
+                <div class="delivery-step">
+                    <div class="step-number">3</div>
+                    <h3>WhatsApp Delivery</h3>
+                    <p>Installation files and activation instructions sent to your WhatsApp</p>
+                </div>
+                <div class="delivery-step">
+                    <div class="step-number">4</div>
+                    <h3>Ready to Use</h3>
+                    <p>Install and activate MARK AI on your computer immediately</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>2. What You Receive</h2>
+            <h3>Core Edition</h3>
+            <ul>
+                <li>MARK AI Core software installer (.exe file)</li>
+                <li>License key for activation</li>
+                <li>Installation guide and user manual</li>
+                <li>Basic configuration instructions</li>
+            </ul>
+
+            <h3>Pro Edition</h3>
+            <ul>
+                <li>MARK AI Pro software installer with advanced features</li>
+                <li>Pro license key with extended functionality</li>
+                <li>Comprehensive user guide and video tutorials</li>
+                <li>Priority support contact information</li>
+                <li>Advanced configuration templates</li>
+            </ul>
+
+            <h3>Ultra Edition</h3>
+            <ul>
+                <li>MARK AI Ultra complete package</li>
+                <li>Ultra license key with all premium features</li>
+                <li>Full documentation suite and video library</li>
+                <li>Dedicated support channel access</li>
+                <li>Custom configuration assistance</li>
+                <li>Priority feature request submission</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>3. Delivery Timeframe</h2>
+            <h3>Immediate Delivery (0-5 minutes)</h3>
+            <ul>
+                <li><strong>Payment Confirmation:</strong> Instant via Razorpay</li>
+                <li><strong>Email Generation:</strong> Automated within 2-3 minutes</li>
+                <li><strong>Download Access:</strong> Available immediately</li>
+            </ul>
+
+            <h3>Delayed Delivery Scenarios</h3>
+            <ul>
+                <li><strong>Payment Verification:</strong> Up to 15 minutes for bank verification</li>
+                <li><strong>Email Delays:</strong> Check spam/junk folder</li>
+                <li><strong>High Traffic:</strong> Rare delays during peak hours (max 30 minutes)</li>
+            </ul>
+
+            <div class="support-box">
+                <h4><i class="fas fa-clock"></i> Not Received Your Download?</h4>
+                <p>If you haven't received your download within 30 minutes:</p>
+                <ul>
+                    <li>Check your email spam/junk folder</li>
+                    <li>Verify the email address used during purchase</li>
+                    <li>Contact support via WhatsApp: +91 9798022573</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>4. Download Requirements</h2>
+            <h3>System Requirements</h3>
+            <ul>
+                <li><strong>Operating System:</strong> Windows 10/11 (64-bit)</li>
+                <li><strong>RAM:</strong> Minimum 4GB (8GB recommended)</li>
+                <li><strong>Storage:</strong> 2GB available space</li>
+                <li><strong>Internet:</strong> Required for initial download and activation</li>
+            </ul>
+
+            <h3>Download Process</h3>
+            <ul>
+                <li>Download links are valid for 30 days after purchase</li>
+                <li>Files can be re-downloaded within the validity period</li>
+                <li>License keys do not expire</li>
+                <li>Installation can be done offline after download</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>5. Global Availability</h2>
+            <p>Since MARK AI is a digital product, it's available worldwide with no geographical restrictions:</p>
+            <ul>
+                <li><strong>No Shipping Costs:</strong> Regardless of location</li>
+                <li><strong>No Customs Fees:</strong> Digital products are not subject to customs</li>
+                <li><strong>No Import Duties:</strong> Software downloads are duty-free</li>
+                <li><strong>Instant Access:</strong> Same delivery time globally</li>
+                <li><strong>Multiple Languages:</strong> Software supports regional settings</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>6. Backup and Re-download</h2>
+            <h3>Download Backup Policy</h3>
+            <ul>
+                <li>Keep your purchase email with download links safe</li>
+                <li>Download links remain active for 30 days post-purchase</li>
+                <li>After 30 days, contact support for re-download access</li>
+                <li>License keys are permanent and don't expire</li>
+            </ul>
+
+            <h3>Lost License Recovery</h3>
+            <ul>
+                <li>License keys are tied to your email address</li>
+                <li>Contact support with purchase proof for key recovery</li>
+                <li>Original purchase email serves as license proof</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>7. Installation Support</h2>
+            <p>We provide comprehensive installation support for all MARK AI editions:</p>
+            
+            <h3>Self-Service Resources</h3>
+            <ul>
+                <li>Detailed installation guides included with download</li>
+                <li>Video tutorials for step-by-step setup</li>
+                <li>FAQ section for common installation issues</li>
+                <li>Troubleshooting documentation</li>
+            </ul>
+
+            <h3>Direct Support</h3>
+            <ul>
+                <li><strong>WhatsApp:</strong> +91 9798022573 (Fastest response)</li>
+                <li><strong>Email:</strong> support@markai.com</li>
+                <li><strong>Response Time:</strong> Within 4 hours during business hours</li>
+                <li><strong>Remote Assistance:</strong> Available for Pro and Ultra editions</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>8. Issues and Resolution</h2>
+            <h3>Common Download Issues</h3>
+            <ul>
+                <li><strong>Slow Download:</strong> Server location optimized for fastest speeds</li>
+                <li><strong>Interrupted Download:</strong> Resume capability available</li>
+                <li><strong>Corrupted Files:</strong> Immediate replacement provided</li>
+                <li><strong>Wrong Edition:</strong> Upgrade/downgrade assistance available</li>
+            </ul>
+
+            <h3>Resolution Process</h3>
+            <ul>
+                <li>Contact support immediately if issues arise</li>
+                <li>Provide purchase confirmation and error details</li>
+                <li>Alternative download methods available if needed</li>
+                <li>Full refund available if technical issues cannot be resolved</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>9. Contact Information</h2>
+            <p>For any delivery-related questions or issues:</p>
+            <ul>
+                <li><strong>Primary Support:</strong> WhatsApp +91 9798022573</li>
+                <li><strong>Email Support:</strong> delivery@markai.com</li>
+                <li><strong>Technical Support:</strong> support@markai.com</li>
+                <li><strong>Business Hours:</strong> Monday-Saturday, 10 AM - 8 PM IST</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h4><i class="fas fa-rocket"></i> Ready to Get Started?</h4>
+                <p>Your MARK AI experience is just one click away. Purchase now and start using your AI assistant within minutes!</p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>

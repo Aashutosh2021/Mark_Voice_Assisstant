@@ -5,6 +5,7 @@
   "hints": {
     "no-inline-styles": "off",
     "compat-api/css": "off",
-    "css-prefix-order": "off"
+    "css-prefix-order": "off",
+    "disown-opener": "off"
   }
 }

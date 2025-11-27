@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - MARK AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+            color: var(--text-primary);
+        }
+        .contact-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .contact-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        .contact-card {
+            background: rgba(0, 20, 40, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(139, 69, 255, 0.3);
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
+        }
+        .contact-icon {
+            font-size: 3rem;
+            color: var(--neon-purple);
+            margin-bottom: 20px;
+        }
+        .contact-card h3 {
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .contact-info {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .contact-link {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .contact-link:hover {
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+        .support-hours {
+            background: rgba(139, 69, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .support-hours h3 {
+            color: var(--neon-purple);
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .contact-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient Background Elements -->
+    <!-- <div class="holographic-grid"></div> -->
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    
+    <!-- Particle System -->
+    <div class="particle-background" id="particle-background">
+        <!-- Particles injected by JS -->
+    </div>
+
+    <!-- Navigation Toolbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="brand-logo-small"></div>
+                <span class="brand-text">MARK AI</span>
+            </div>
+            <div class="navbar-menu">
+                <a class="navbar-item" href="index.html">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a class="navbar-item" href="about.html">
+                    <i class="fas fa-robot"></i>
+                    <span>About</span>
+                </a>
+                <a class="navbar-item active" href="contact.html">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+                <a class="navbar-item" href="privacy.html">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Privacy</span>
+                </a>
+                <a class="navbar-item" href="terms.html">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Terms</span>
+                </a>
+                <a class="navbar-item" href="refund.html">
+                    <i class="fas fa-handshake"></i>
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="navbar-toggle" id="navbar-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="contact-container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <div class="contact-header">
+            <h1 class="contact-title">Contact Us</h1>
+            <p>Connect with the MARK AI team for support, partnerships, or inquiries</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>WhatsApp Support</h3>
+                <div class="contact-info">
+                    <p>Get instant support and download assistance</p>
+                    <a href="https://wa.me/919798022573" class="contact-link" target="_blank">
+                        +91 9798022573
+                    </a>
+                    <p><small>Available 24/7 for urgent support</small></p>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Premium Support</h3>
+                <div class="contact-info">
+                    <p><strong>Pro Edition:</strong> 48-hour response time</p>
+                    <p><strong>Ultra Edition:</strong> 24-hour priority response</p>
+                    <p>Dedicated technical assistance for advanced features and integrations</p>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Security & Privacy</h3>
+                <div class="contact-info">
+                    <p><strong>Security Issues:</strong><br>
+                    <a href="mailto:security@markai.com" class="contact-link">security@markai.com</a></p>
+                    
+                    <p><strong>Privacy Concerns:</strong><br>
+                    <a href="mailto:privacy@markai.com" class="contact-link">privacy@markai.com</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="support-hours">
+            <h3><i class="fas fa-clock"></i> Support Hours</h3>
+            <p><strong>WhatsApp & Emergency Support:</strong> 24/7 Available</p>
+            <p><strong>Email Support:</strong> Monday - Friday, 9:00 AM - 6:00 PM IST</p>
+            <p><strong>Business Hours:</strong> Monday - Saturday, 10:00 AM - 8:00 PM IST</p>
+            <br>
+            <p><em>We strive to respond to all inquiries within our commitment timeframes. Premium support customers receive priority assistance.</em></p>
+        </div>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>

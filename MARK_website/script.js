@@ -3,7 +3,6 @@ let selectedVersion = null;
 let selectedVariant = null;
 let downloadUrl = null;
 let downloadInProgress = false;
-let paymentVerified = false;
 
 // Loading Animation Setup
 function initializeLoadingScreen() {
@@ -190,7 +189,7 @@ const versions = {
             ],
             downloadFile: "mark_ai_windows_pro_v3.0.exe",
             fileSize: "xxx.xx MB",
-            price: 39900, // ₹399 in paise
+            price: 29900, // ₹299 in paise
             downloadUrl: "download url"
         },
         ultra: {
@@ -414,9 +413,6 @@ function selectVariant(variant) {
     const continueBtn = document.getElementById('variant-continue-btn');
     continueBtn.style.display = 'block';
     continueBtn.disabled = false;
-    
-    // Update pay button visibility
-    updatePayButton();
 }
 
 // Go back from details function
@@ -471,99 +467,32 @@ function showVersionDetails() {
     });
     
     showScreen('details-screen');
-    
-    // Update pay button visibility on details screen
-    updatePayButton();
 }
 
-// Handle payment function
-async function handlePayment() {
-    return new Promise((resolve, reject) => {
-        let version;
-        if (selectedVersion === 'mark1' && selectedVariant) {
-            version = versions.mark1[selectedVariant];
-        } else {
-            reject(new Error('Invalid selection parameter'));
-            return;
-        }
-        
-        const options = {
-            "key": "rzp_test_1DP5mmOlF5G5ag", // Enter the Key ID generated from the Dashboard
-            "amount": version.price.toString(), // Amount is in currency subunits (paise)
-            "currency": "INR",
-            "name": "MARK AI", // Business name
-            "description": `License Acquisition: ${version.title}`,
-            "image": "https://example.com/your_logo", // Add your logo URL
-            // "order_id": "order_9A33XWu170gUtm", // This would be generated from backend
-            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/", // Your callback URL
-            "prefill": { // Auto-fill customer's contact information
-                "name": "MARK AI User", // Customer's name
-                "email": "user@markai.sys", // Customer's email
-                "contact": "9000000000" // Customer's phone number
-            },
-            "notes": {
-                "address": "MARK AI Corporate Office"
-            },
-            "theme": {
-                "color": "#00f3ff" // Neon Cyan theme
-            },
-            "handler": function (response) {
-                console.log('Payment Success:', response);
-                showNotification('Transaction Authorized. Payment ID: ' + response.razorpay_payment_id, 'success');
-                paymentVerified = true;
-                resolve(response);
-            },
-            "modal": {
-                "ondismiss": function () {
-                    showNotification('Transaction Aborted.', 'warning');
-                    reject(new Error('User cancelled transaction'));
-                }
-            }
-        };
 
-        const rzp = new Razorpay(options);
-        
-        // Handle payment failure
-        rzp.on('payment.failed', function (response) {
-            console.error('Payment failed:', response.error);
-            showNotification(`Transaction Failed: ${response.error.description}`, 'error');
-            reject(new Error(response.error.description));
-        });
 
-        // Open Razorpay checkout
-        rzp.open();
-    });
-}
-
-// Get Mark function
-async function getMark() {
-    try {
-        // First handle payment
-        await handlePayment();
-        
-        if (!paymentVerified) {
-            showNotification('Verification Failure. Access Denied.', 'error');
-            return;
-        }
-        
-        // Show congratulations screen with WhatsApp option
-        showScreen('whatsapp-screen');
-        
-    } catch (error) {
-        console.error('Error in getMark:', error);
-        // Error is usually handled in handlePayment notifications
-    }
+// Get Mark function - Direct WhatsApp Order
+function getMark() {
+    // Directly show WhatsApp order screen
+    showScreen('whatsapp-screen');
 }
 
 // Open WhatsApp function
 function openWhatsApp() {
     let version;
-    if (selectedVersion === 'mark' && selectedVariant) {
+    if (selectedVersion === 'mark1' && selectedVariant) {
         version = versions.mark1[selectedVariant];
     }
     
-    // Create WhatsApp message - REBRANDED
-    const message = `System Uplink Initiated. I have acquired license for ${version.title}. Requesting activation key and download directives.`;
+    // Create WhatsApp order message
+    const message = `Hi! I want to order ${version.title} (Price: ₹${version.price/100}).
+
+Please provide:
+✅ .exe installation file
+✅ Activation key
+✅ Setup instructions
+
+Ready to complete payment and receive my MARK AI system!`;
     const phoneNumber = "919798022573"; 
     
     // Open WhatsApp
@@ -706,11 +635,11 @@ document.addEventListener('DOMContentLoaded', function() {
     bindClick('whatsapp-back-btn', () => showScreen('details-screen'));
     bindClick('download-btn', downloadMark);
     
-    // Initialize Razorpay payment integration
-    initializeRazorpay();
-    
     // Load key status on page load
     updateKeyStatus();
+    
+    // Initialize navbar highlighting
+    initNavbarHighlighting();
 });
 
 // Direct Razorpay Payment Integration
@@ -783,16 +712,66 @@ function initializeRazorpay() {
     };
 }
 
-// Show/hide pay button based on selection
-function updatePayButton() {
-    const rzpButton = document.getElementById('rzp-button1');
-    if (!rzpButton) return;
+
+
+// Navbar highlighting functionality
+function updateNavbarHighlight() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
-    if (selectedVersion && selectedVariant) {
-        rzpButton.style.display = 'block';
-    } else {
-        rzpButton.style.display = 'none';
+    // Remove active class from all navbar items
+    document.querySelectorAll('.navbar-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Add active class to current page navbar item
+    const navItems = {
+        'index.html': 'Home',
+        '': 'Home', // Root path
+        'about.html': 'About',
+        'contact.html': 'Contact',
+        'privacy.html': 'Privacy',
+        'terms.html': 'Terms',
+        'refund.html': 'Refunds',
+        'shipping.html': 'Shipping'
+    };
+    
+    // Handle pages in subdirectories
+    let pageName = currentPage;
+    if (currentPage.includes('/')) {
+        pageName = currentPage.split('/').pop();
     }
+    
+    // Find and highlight the correct navbar item
+    document.querySelectorAll('.navbar-item').forEach(item => {
+        const itemText = item.querySelector('span')?.textContent?.trim();
+        const itemHref = item.getAttribute('href');
+        
+        // Check if this navbar item corresponds to current page
+        if (itemHref) {
+            const hrefPage = itemHref.split('/').pop();
+            if (hrefPage === pageName || 
+                (pageName === 'index.html' && (hrefPage === 'index.html' || hrefPage === '')) ||
+                (pageName === '' && (hrefPage === 'index.html' || hrefPage === ''))) {
+                item.classList.add('active');
+            }
+        }
+    });
+}
+
+// Initialize navbar highlighting when DOM is loaded
+function initNavbarHighlighting() {
+    updateNavbarHighlight();
+    
+    // Update navbar when navigating via browser back/forward
+    window.addEventListener('popstate', updateNavbarHighlight);
+    
+    // Update navbar when clicking on navbar links
+    document.querySelectorAll('.navbar-item').forEach(item => {
+        item.addEventListener('click', () => {
+            setTimeout(updateNavbarHighlight, 100);
+        });
+    });
 }
 
 // Make functions global
@@ -804,8 +783,9 @@ window.showVersionDetails = showVersionDetails;
 window.getMark = getMark;
 window.openWhatsApp = openWhatsApp;
 window.downloadMark = downloadMark;
-window.initializeRazorpay = initializeRazorpay;
-window.updatePayButton = updatePayButton;
+
+window.updateNavbarHighlight = updateNavbarHighlight;
+window.initNavbarHighlighting = initNavbarHighlighting;
 
 
 // Prevent right-click context menu
