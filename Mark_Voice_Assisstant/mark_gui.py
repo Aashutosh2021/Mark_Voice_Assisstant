@@ -26,6 +26,8 @@ import traceback
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from prompts import VARIANT_NAME
+
 # Windows audio control imports
 try:
     from ctypes import cast, POINTER
@@ -107,12 +109,6 @@ VARIANT_SECRET_MAP = {
     'core': '7fbe2b643cf544b1a2c979e24ed456a9bba1c688e92e40421e093fa0bd12e8af',
     'pro': '008abf1b327d67aabc0cb57f5af21c1fa29415a4acf40407b3bfc8e123bf2a93',
     'ultra': 'a01a30ecbcd19c4972e4fa48bc991f300a224473bb460c93fb5102cb874ac07c'
-}
-
-
-UPGRADE_PATHS = {
-    'core': 'pro',
-    'pro': 'ultra'
 }
 
 # Conditional imports for face recognition
@@ -234,7 +230,7 @@ class RightPanel(QWidget):
         self.time_widget = self.create_time_card()
         layout.addWidget(self.time_widget)
 
-        network_label = QLabel("NETWORK INTERFACE")
+        network_label = QLabel("WIFI CONNECTION")
         network_label.setStyleSheet(
             """
             color: #ffd700;
@@ -246,15 +242,9 @@ class RightPanel(QWidget):
         """
         )
         layout.addWidget(network_label)
-        self.network_ip_widget = self.create_network_card("IP ADDRESS", "192.168.1.100")
-        self.network_speed_widget = self.create_network_card(
-            "BANDWIDTH", "↑ 12.4 Mbps / ↓ 45.8 Mbps"
-        )
         self.network_status_widget = self.create_network_card(
             "CONNECTION", "WiFi (MARK_5G) - 92%"
         )
-        layout.addWidget(self.network_ip_widget)
-        layout.addWidget(self.network_speed_widget)
         layout.addWidget(self.network_status_widget)
 
         layout.addItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
@@ -429,33 +419,18 @@ class RightPanel(QWidget):
         self.date_label.setText(now.strftime("%A, %d %B %Y"))
 
     def update_network_info(self):
-        """Update network information with live data when possible."""
-        ip_address = self.get_local_ip() or "Unavailable"
+        """Update WiFi connection information."""
         wifi_details = self.get_wifi_details() or {}
         ssid = wifi_details.get("ssid") or "Wi-Fi"
         signal_display = wifi_details.get("signal")
-
-        upload_speed = f"{np.random.uniform(5.0, 15.0):.1f} Mbps"
-        download_speed = f"{np.random.uniform(30.0, 60.0):.1f} Mbps"
 
         status_text = ssid
         if signal_display:
             status_text = f"{ssid} - {signal_display}"
 
-        self.network_ip_widget.layout().itemAt(1).widget().setText(ip_address)
-        self.network_speed_widget.layout().itemAt(1).widget().setText(
-            f"↑ {upload_speed} / ↓ {download_speed}"
-        )
         self.network_status_widget.layout().itemAt(1).widget().setText(status_text)
 
-    def get_local_ip(self):
-        """Get local IP address."""
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-                s.connect(("8.8.8.8", 80))
-                return s.getsockname()[0]
-        except Exception:
-            return None
+
 
     def get_wifi_details(self):
         """Retrieve Wi-Fi SSID and signal strength on supported platforms."""
@@ -636,20 +611,8 @@ class SystemStatsPanel(QWidget):
         super().__init__(parent)
         self.setFixedWidth(350)
         self.setStyleSheet("background-color: transparent;")
-        self.cpu_usage = 0
-        self.ram_usage = 0
-        self.ram_total = psutil.virtual_memory().total / (1024**3)
-        (
-            self.storage_used,
-            self.storage_total,
-            self.storage_drives,
-        ) = self.calculate_storage_stats()
-        self.cpu_temp = 0
         self.power_source = "AC"
         self.battery_level = 100
-        self.weather_city = "NEURAL CITY"
-        self.weather_temp = "24°C"
-        self.weather_status = "CLEAR"
         self.init_ui()
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self.update_system_data)
@@ -691,97 +654,8 @@ class SystemStatsPanel(QWidget):
         layout.addWidget(self.power_widget)
 
         layout.addItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
-
-        weather_label = QLabel("ENVIRONMENT")
-        weather_label.setStyleSheet(
-            """
-            color: #ffd700;
-            font-size: 14px;
-            font-weight: bold;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(139, 69, 255, 0.3);
-            letter-spacing: 1px;
-        """
-        )
-        layout.addWidget(weather_label)
-        self.weather_widget = self.create_weather_card()
-        layout.addWidget(self.weather_widget)
-
+        
         self.setLayout(layout)
-
-    def calculate_storage_stats(self):
-        """Aggregate storage usage across mounted drives."""
-        total_used = 0
-        total_size = 0
-        drives = []
-        try:
-            partitions = psutil.disk_partitions(all=False)
-        except Exception:
-            partitions = []
-
-        for part in partitions:
-            opts = part.opts.lower() if part.opts else ""
-            if platform.system() == "Windows" and "cdrom" in opts:
-                continue
-            if not part.mountpoint:
-                continue
-            try:
-                usage = psutil.disk_usage(part.mountpoint)
-            except (PermissionError, FileNotFoundError):
-                continue
-            if usage.total == 0:
-                continue
-
-            used_gb = usage.used / (1024**3)
-            total_gb = usage.total / (1024**3)
-            drives.append(
-                {
-                    "label": self._format_drive_label(part.mountpoint),
-                    "used": used_gb,
-                    "total": total_gb,
-                }
-            )
-            total_used += usage.used
-            total_size += usage.total
-
-        if not drives:
-            usage = psutil.disk_usage("/")
-            drives.append(
-                {
-                    "label": self._format_drive_label("/"),
-                    "used": usage.used / (1024**3),
-                    "total": usage.total / (1024**3),
-                }
-            )
-            total_used = usage.used
-            total_size = usage.total
-
-        return total_used / (1024**3), total_size / (1024**3), drives
-
-    def _format_drive_label(self, mountpoint):
-        """Normalize mount labels for display."""
-        if platform.system() == "Windows":
-            drive = Path(mountpoint).drive.upper()
-            return drive if drive else mountpoint
-        return mountpoint or "/"
-
-    def get_storage_display_text(self):
-        """Build compact label text shown on the card."""
-        drive_count = len(getattr(self, "storage_drives", []))
-        base_text = f"{self.storage_used:.0f} / {self.storage_total:.0f} GB"
-        if drive_count > 1:
-            return f"Total {base_text} ({drive_count} drives)"
-        return base_text
-
-    def get_storage_tooltip(self):
-        """Provide per-drive details in a tooltip."""
-        if not getattr(self, "storage_drives", None):
-            return "Storage details unavailable"
-        lines = [
-            f"{drive['label']}: {drive['used']:.0f} / {drive['total']:.0f} GB"
-            for drive in self.storage_drives
-        ]
-        return "\n".join(lines)
 
     def _update_battery_status(self):
         """Update battery status from system."""
@@ -844,93 +718,16 @@ class SystemStatsPanel(QWidget):
         card.setLayout(layout)
         return card
 
-    def create_weather_card(self):
-        """Create the refined weather display card."""
-        card = QWidget()
-        card.setStyleSheet(
-            """
-            background-color: rgba(0, 20, 40, 120);
-            border-radius: 4px;
-            border: 1px solid rgba(0, 80, 120, 80);
-        """
-        )
-        card.setFixedHeight(100)
-        layout = QHBoxLayout()
-        layout.setContentsMargins(15, 15, 15, 15)
-        layout.setSpacing(15)
 
-        icon_widget = QWidget()
-        icon_widget.setFixedSize(40, 40)
-        icon_widget.setStyleSheet("background-color: transparent;")
-        self.weather_icon = WeatherIcon(self.weather_status)
-        icon_layout = QVBoxLayout()
-        icon_layout.addWidget(self.weather_icon)
-        icon_widget.setLayout(icon_layout)
-
-        info_widget = QWidget()
-        info_layout = QVBoxLayout()
-        info_layout.setContentsMargins(0, 0, 0, 0)
-        info_layout.setSpacing(4)
-        city_label = QLabel(self.weather_city)
-        city_label.setStyleSheet(
-            """
-            color: #ffd700;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        """
-        )
-        temp_label = QLabel(self.weather_temp)
-        temp_label.setStyleSheet(
-            """
-            color: #ffffff;
-            font-size: 22px;
-            font-weight: bold;
-        """
-        )
-        status_label = QLabel(self.weather_status)
-        status_label.setStyleSheet(
-            """
-            color: #c8a2ff;
-            font-size: 12px;
-        """
-        )
-        info_layout.addWidget(city_label)
-        info_layout.addWidget(temp_label)
-        info_layout.addWidget(status_label)
-        info_widget.setLayout(info_layout)
-
-        layout.addWidget(icon_widget)
-        layout.addWidget(info_widget)
-        card.setLayout(layout)
-        return card
 
     def update_system_data(self):
         """Update with real system data."""
         self.cpu_usage = psutil.cpu_percent()
         mem = psutil.virtual_memory()
         self.ram_usage = mem.used / (1024**3)
-        (
-            self.storage_used,
-            self.storage_total,
-            self.storage_drives,
-        ) = self.calculate_storage_stats()
         
         # Power status
         self._update_battery_status()
-
-        # Mock weather update
-        if np.random.random() < 0.2:
-            weather_options = [
-                ("CLEAR", "24°C"),
-                ("CLOUDY", "21°C"),
-                ("RAIN", "18°C"),
-                ("THUNDER", "20°C"),
-            ]
-            self.weather_status, self.weather_temp = weather_options[
-                np.random.randint(0, len(weather_options))
-            ]
-            self.weather_icon.set_weather_type(self.weather_status)
 
         self.update_widgets()
 
@@ -945,11 +742,6 @@ class SystemStatsPanel(QWidget):
         self.power_widget.layout().itemAt(2).widget().setValue(
             self.battery_level if self.power_source == "Battery" else 100
         )
-
-        weather_info = self.weather_widget.layout().itemAt(1).widget()
-        weather_info.layout().itemAt(0).widget().setText(self.weather_city)
-        weather_info.layout().itemAt(1).widget().setText(self.weather_temp)
-        weather_info.layout().itemAt(2).widget().setText(self.weather_status)
 
     def paintEvent(self, event):
         """Custom painting for the glassy background effect."""
@@ -1122,66 +914,6 @@ class TemperatureBar(LinearProgressBar):
         painter.drawRoundedRect(glow_rect, 3, 3)
 
 
-class WeatherIcon(QWidget):
-    """Minimal vector-style weather icon."""
-
-    def __init__(self, weather_type="CLEAR", parent=None):
-        super().__init__(parent)
-        self.weather_type = weather_type
-        self.setFixedSize(40, 40)
-        self.setStyleSheet("background-color: transparent;")
-
-    def set_weather_type(self, weather_type):
-        self.weather_type = weather_type
-        self.update()
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(QPen(QColor(255, 215, 0), 2))
-        center = QPointF(20, 20)
-
-        if self.weather_type == "CLEAR":
-            painter.setBrush(QBrush(QColor(255, 255, 0, 150)))
-            painter.drawEllipse(center, 8, 8)
-            for i in range(0, 360, 45):
-                angle = math.radians(i)
-                start_x = center.x() + 10 * math.cos(angle)
-                start_y = center.y() + 10 * math.sin(angle)
-                end_x = center.x() + 14 * math.cos(angle)
-                end_y = center.y() + 14 * math.sin(angle)
-                painter.drawLine(QPointF(start_x, start_y), QPointF(end_x, end_y))
-        elif self.weather_type == "CLOUDY":
-            self.draw_cloud(painter, QColor(200, 200, 255, 150))
-        elif self.weather_type == "RAIN":
-            self.draw_cloud(painter, QColor(150, 150, 255, 150))
-            painter.setPen(QPen(QColor(0, 150, 255), 1.5))
-            for i in range(3):
-                painter.drawLine(15 + i * 5, 28, 13 + i * 5, 34)
-        elif self.weather_type == "THUNDER":
-            self.draw_cloud(painter, QColor(100, 100, 200, 150))
-            bolt = QPolygonF(
-                [
-                    QPointF(22, 25),
-                    QPointF(18, 30),
-                    QPointF(21, 30),
-                    QPointF(17, 35),
-                ]
-            )
-            painter.setBrush(QBrush(QColor(255, 255, 0)))
-            painter.setPen(Qt.NoPen)
-            painter.drawPolygon(bolt)
-
-    def draw_cloud(self, painter, color):
-        path = QPainterPath()
-        path.moveTo(30, 25)
-        path.arcTo(15, 15, 15, 10, 0, 180)
-        path.arcTo(10, 18, 10, 7, 90, -180)
-        path.arcTo(15, 10, 20, 15, 180, 180)
-        path.closeSubpath()
-        painter.setBrush(QBrush(color))
-        painter.setPen(QPen(QColor(255, 215, 0), 1.5))
-        painter.drawPath(path)
 
 class MARKInterfaceWidget(QWidget):
     """Futuristic MARK token display - four circular letter tokens with pulsing animations."""
@@ -1398,7 +1130,8 @@ class MARKInterfaceWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.agent_process = None
-        self.setWindowTitle("MARK AI Neural Core Interface")
+        self.setWindowIcon(QIcon(resource_path("Mark_logo.png")))
+        self.setWindowTitle(f"MARK AI - {VARIANT_NAME.upper()} Edition")
         self.setGeometry(100, 100, 1600, 900)
         self.setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #0a0510, stop:0.5 #150a20, stop:1 #0a0510);")
 
@@ -1686,6 +1419,15 @@ class MARKInterfaceWindow(QMainWindow):
 # --- Utility and Authentication Functions ---
 # Note: These functions are kept separate for clarity but could be in their own modules.
 
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller."""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
+
 def get_service_json_path():
     """Returns the path to service.json whether running from source or PyInstaller exe."""
     if getattr(sys, "frozen", False):
@@ -1840,35 +1582,9 @@ def detect_variant_and_ref(access_key):
         print(f"Error in detect_variant_and_ref: {e}")
         return None, None, None
 
-def prompt_upgrade(current_variant):
-    """Prompt user for upgrade"""
-    upgrade_to = UPGRADE_PATHS.get(current_variant)
-    if not upgrade_to:
-        return False
-    
-    reply = safe_message_box('Upgrade Available', 
-                            f'Upgrade from {current_variant} to {upgrade_to}?', 
-                            'question')
-    return reply == QMessageBox.Yes if reply else False
 
-def process_upgrade(current_variant):
-    """Process upgrade to next variant"""
-    upgrade_to = UPGRADE_PATHS.get(current_variant)
-    if not upgrade_to:
-        return False
-    
-    try:
-        # Set new variant
-        set_env_variable('MARK_VARIANT', upgrade_to)
-        set_env_variable('SYSTEM_CONST_32', VARIANT_SECRET_MAP[upgrade_to])
-        os.environ['MARK_VARIANT'] = upgrade_to
-        os.environ['SYSTEM_CONST_32'] = VARIANT_SECRET_MAP[upgrade_to]
-        
-        safe_message_box('Upgrade Complete', f'Successfully upgraded to {upgrade_to}!', 'info')
-        return True
-    except Exception as e:
-        safe_message_box('Upgrade Failed', f'Upgrade failed: {e}', 'critical')
-        return False
+
+
 
 def activation_gate():
     """Main activation gate function"""
@@ -1887,12 +1603,6 @@ def activation_gate():
         if current_variant in VARIANT_SECRET_MAP and secret == VARIANT_SECRET_MAP[current_variant]:
             # Check and setup user name if not already set
             check_and_setup_user_name()
-            
-            # Check for upgrade opportunity
-            if UPGRADE_PATHS.get(current_variant) and prompt_upgrade(current_variant):
-                if process_upgrade(current_variant):
-                    return True
-                safe_message_box('Upgrade Cancelled', 'Continuing with your current version.', 'info')
             return True
         safe_message_box('Error', 'This is incompatible version.', 'critical')
         return False

@@ -18,7 +18,9 @@ from prompts import (
     SESSION_INSTRUCTION_2,
     save_user_message,
     save_assistant_message,
-    get_today_reminder_message_from_db
+    get_today_reminder_message_from_db,
+    check_variant_access,
+    get_variant_restriction_message
 )
 
 from tools import (
@@ -117,16 +119,23 @@ class Assistant(Agent):
         }
 
         # Determine variant from environment
-        variant = os.getenv("MARK_VARIANT", "core").lower()
-        if variant not in FEATURE_MAP:
-            print(f"[WARN] Unknown variant '{variant}', defaulting to core.")
-            variant = "core"
+        self.variant = os.getenv("MARK_VARIANT", "core").lower()
+        if self.variant not in FEATURE_MAP:
+            print(f"[WARN] Unknown variant '{self.variant}', defaulting to core.")
+            self.variant = "core"
+
+        # Store all available tools for reference
+        self.all_tools = {
+            "core": FEATURE_MAP["core"],
+            "pro": FEATURE_MAP["pro"], 
+            "ultra": FEATURE_MAP["ultra"]
+        }
 
         # Initialize only allowed tools
-        allowed_tools = FEATURE_MAP[variant]
+        allowed_tools = FEATURE_MAP[self.variant]
         self._tools = self._initialize_tools(allowed_tools)
 
-        print(f"[INFO] Assistant initialized with variant: {variant} ({len(allowed_tools)} tools)")
+        print(f"[INFO] Assistant initialized with variant: {self.variant} ({len(allowed_tools)} tools)")
 
         # Initialize agent with optimized configuration
         super().__init__(
@@ -183,6 +192,32 @@ class Assistant(Agent):
             "\nWhen a user request requires tool usage, actively use the appropriate tool and provide feedback about the action taken."
         ])
 
+    async def on_before_llm_inference(self, chat_ctx, participant):
+        """Intercept user message before it goes to LLM to check for variant restrictions."""
+        # Get the latest user message
+        if chat_ctx.messages:
+            latest_message = chat_ctx.messages[-1]
+            if hasattr(latest_message, 'content') and latest_message.content:
+                user_text = str(latest_message.content)
+                
+                # Check for restricted features
+                restriction_message = self.check_feature_request(user_text)
+                if restriction_message:
+                    print(f"🚫 BLOCKING RESTRICTED FEATURE REQUEST: {user_text}")
+                    
+                    # Add the restriction message as the assistant's response
+                    from livekit.agents.llm import ChatMessage
+                    restriction_msg = ChatMessage.create(
+                        text=restriction_message,
+                        role="assistant"
+                    )
+                    chat_ctx.messages.append(restriction_msg)
+                    
+                    # Return early to skip LLM processing
+                    return chat_ctx
+        
+        return await super().on_before_llm_inference(chat_ctx, participant)
+
     async def on_tool_call_start(self, tool_call):
         """Handle tool call start event."""
         print(f"🔧 Starting tool call: {tool_call.function_info.name}")
@@ -197,10 +232,85 @@ class Assistant(Agent):
         print(f"🔧 Tool call completed: {tool_call.function_info.name} - {'✅ Success' if success else '❌ Failed'}")
         return await super().on_tool_call_end(tool_call, result)
 
+    def check_feature_request(self, message: str) -> Optional[str]:
+        """Check if user is requesting unavailable features and return restriction message."""
+        message_lower = message.lower()
+        
+        # Define feature keywords and their required variants
+        restricted_features = {
+            "ultra": {
+                "keywords": [
+                    "generate code", "code generation", "write code", "create code",
+                    "virus scan", "antivirus", "malware scan", "security scan",
+                    "ai image", "generate image", "create image", "dall-e",
+                    "excel analysis", "data analysis", "analyze data", "spreadsheet",
+                    "visual analysis", "camera", "image processing", "computer vision",
+                    "smart clipboard", "advanced automation", "multi task"
+                ],
+                "features": [
+                    "Code Generation", "Virus Scanning", "AI Image Generation", 
+                    "Excel Data Analysis", "Visual Analysis", "Advanced Automation"
+                ]
+            },
+            "pro": {
+                "keywords": [
+                    "send whatsapp", "whatsapp message", "email send",
+                    "system info", "system diagnostics", "power action",
+                    "shutdown", "restart", "lock system", "notepad write"
+                ],
+                "features": [
+                    "WhatsApp Messaging", "Email Sending", "System Diagnostics",
+                    "Power Control", "Document Writing"
+                ]
+            }
+        }
+        
+        # Check if user is requesting restricted features
+        for required_variant, data in restricted_features.items():
+            if not check_variant_access(required_variant):  # User doesn't have access
+                for keyword in data["keywords"]:
+                    if keyword in message_lower:
+                        # Find which specific feature was requested
+                        if "code" in keyword:
+                            feature_name = "Code Generation"
+                        elif "virus" in keyword or "scan" in keyword:
+                            feature_name = "Virus Scanning"
+                        elif "image" in keyword:
+                            feature_name = "AI Image Generation"
+                        elif "excel" in keyword or "data" in keyword:
+                            feature_name = "Data Analysis"
+                        elif "camera" in keyword or "visual" in keyword:
+                            feature_name = "Visual Analysis"
+                        elif "whatsapp" in keyword:
+                            feature_name = "WhatsApp Messaging"
+                        else:
+                            feature_name = keyword.title()
+                        
+                        return get_variant_restriction_message(feature_name, required_variant.title())
+        
+        return None
+
     async def on_user_turn_completed(self, turn_ctx, new_message):
         """Handle post-processing after user turn completion."""
         user_message = turn_ctx.user_message.text_content if turn_ctx.user_message else "[no user input]"
         assistant_message = new_message.text_content if new_message else "[no assistant reply]"
+
+        # Check for restricted feature requests and override response if needed
+        if user_message and user_message != "[no user input]":
+            restriction_message = self.check_feature_request(user_message)
+            if restriction_message:
+                # Override the assistant's response with variant restriction message
+                print(f"\n🚫 VARIANT RESTRICTION TRIGGERED for: {user_message}")
+                print(f"🤖 RESTRICTION MESSAGE: {restriction_message}")
+                
+                # If we can modify the response, do it
+                if hasattr(new_message, 'text_content'):
+                    try:
+                        new_message.text_content = restriction_message
+                        assistant_message = restriction_message
+                    except:
+                        # If we can't modify the message, at least log it
+                        print(f"⚠️ Could not override response, but restriction applies: {restriction_message}")
 
         # Log conversation
         print(f"\n🗣️ USER: {user_message}")

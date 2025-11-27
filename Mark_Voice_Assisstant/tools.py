@@ -28,6 +28,9 @@ assistant_instance = None
 # Load environment variables
 load_dotenv()
 
+# Import variant access control functions
+from prompts import check_variant_access, get_variant_restriction_message
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -134,6 +137,11 @@ async def system_power_action(action: Literal["shutdown", "restart", "lock"]) ->
     Security:
         - Requires admin privileges for shutdown/restart
     """
+    # Check variant access (Pro tier feature)
+    access_result = check_variant_access("pro", ["shutdown", "restart", "lock", "power control"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("pro", "System power controls")
+    
     try:
         print(f"🔧 Power action: {action}")
         
@@ -423,6 +431,11 @@ async def send_email(to_email: str, subject: str, message: str, cc_email: Option
     Returns:
         str: Delivery confirmation or error
     """
+    # Check variant access (Pro tier feature)
+    access_result = check_variant_access("pro", ["send email", "email", "gmail"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("pro", "Email sending")
+    
     try:
         print(f"📧 Sending email to: {to_email}")
         
@@ -669,7 +682,6 @@ from typing import Tuple
 
 @function_tool()
 async def send_whatsapp_message(contact: str, message: str) -> str:
-    
     """
     Sends WhatsApp messages via desktop automation.
     
@@ -685,6 +697,11 @@ async def send_whatsapp_message(contact: str, message: str) -> str:
     Returns:
         str: Delivery confirmation and follow-up prompt
     """
+    # Check variant access (Pro tier feature)
+    access_result = check_variant_access("pro", ["whatsapp", "send message", "messaging"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("pro", "WhatsApp messaging")
+    
     import pyautogui
     import asyncio
     import os
@@ -757,6 +774,10 @@ async def write_in_notepad(title: str, content: str, document_type: str = "lette
     Returns:
         str: Saved file path confirmation
     """
+    # Check variant access (Pro tier feature)
+    access_result = check_variant_access("pro", ["write notepad", "create document", "notepad"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("pro", "Document creation")
 
     import pyautogui
     import asyncio
@@ -965,6 +986,11 @@ async def get_system_info() -> str:
     Metrics:
         - Updates in real-time
     """
+    # Check variant access (Pro tier feature)
+    access_result = check_variant_access("pro", ["system info", "diagnostics", "system status"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("pro", "System diagnostics")
+    
     import psutil
     import socket
     import platform
@@ -1080,6 +1106,11 @@ async def click_on_text(target_text: str) -> str:
         - Uses Tesseract OCR
         - Fuzzy text matching
     """
+    # Check variant access (Ultra tier feature)
+    access_result = check_variant_access("ultra", ["click text", "ocr click", "text recognition"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("ultra", "OCR text clicking")
+    
     import pyautogui
     import pytesseract
     import cv2
@@ -1157,6 +1188,10 @@ async def scan_system_for_viruses() -> str:
     Notes:
         - Requires admin privileges
     """
+    # Check variant access (Ultra tier feature)
+    access_result = check_variant_access("ultra", ["virus scan", "antivirus", "malware scan"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("ultra", "Virus scanning")
     import asyncio
     import subprocess
 
@@ -5189,6 +5224,10 @@ async def generate_ai_image(
     Returns:
         Success message with image details
     """
+    # Check variant access (Ultra tier feature)
+    access_result = check_variant_access("ultra", ["ai image", "generate image", "image generation"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("ultra", "AI image generation")
     
     print("🚀 Starting image generation...")
     start_time = time.time()
@@ -5727,6 +5766,12 @@ async def generate_and_type_code(prompt: str, filename: str, language: Optional[
     Returns:
         str: Status message (success/failure) with formatting details
     """
+    # ⚠️ VARIANT ACCESS CHECK
+    # Check variant access (Ultra tier feature)
+    access_result = check_variant_access("ultra", ["generate code", "code generation", "programming"])
+    if not access_result["has_access"]:
+        return get_variant_restriction_message("ultra", "Code generation")
+    
     try:
         # ✅ Enhanced Configuration
         GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
